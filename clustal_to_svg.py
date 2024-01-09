@@ -82,7 +82,7 @@ def split_lines(lines, lines_per_block, lines_per_svg=72):
         
     return svg_list # list of lists
 
-def create_svg(alignment, out_prefix, codes="FALSE", nums="FALSE"):
+def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE"):
     # alignment is an Alignment object; out is the outfile path
     
     line_height = 1.25 # Adjust as needed; not sure if 1.25 is a good idea yet, but it's good enough for now
@@ -114,7 +114,7 @@ def create_svg(alignment, out_prefix, codes="FALSE", nums="FALSE"):
             svg += f"</tspan>"
         svg += f"</text></svg>"
         
-        out = f"{out_prefix}{i}.svg"
+        out = f"{out_directory}{i}.svg"
         with open(out, "w") as o:
             print(f"Writing part {i} to {out}.", flush=True)
             o.write(svg)
@@ -125,7 +125,7 @@ def create_svg(alignment, out_prefix, codes="FALSE", nums="FALSE"):
     ##### add other features back in (like input options)
     ##### add API access to UniProt/database annotations/tabular annotations
     
-def read_alignment(clust_file, max_header=16):
+def read_alignment(infile, max_header=16):
     ''' max_header is the max length (before 2 spaces are added) of the protein name + spaces.
     example: max_header=10; protein name + spaces = 12
     If the given protein name exceeds this value, it will be truncated.
@@ -134,7 +134,7 @@ def read_alignment(clust_file, max_header=16):
     protein_key = {} # does not contain protein objects; just names and aligned seqs
     codes = ""
     header_len = 1000 # set so that it just uses an empty line if there is no header_len set
-    with open(clust_file, "r") as clust:
+    with open(infile, "r") as clust:
         header = clust.readline() # includes "\n" at the end
         for line in clust:
             if line == "\n":
@@ -180,25 +180,36 @@ def find_path(path, action):
             os.makedirs(parents)
     return abspath
 
-def main():
+def arguments():
     # add descriptions to arguments later
     parser = argparse.ArgumentParser()
     # change clust_path arguments later
-    parser.add_argument("clust_file", nargs="?")    
-    parser.add_argument("-out_prefix", nargs="?", default="./")
+    parser.add_argument("-infile")    
+    parser.add_argument("-out_directory", nargs="?", default="./") # consider changing to out_directory
     parser.add_argument("-codes", nargs="?", default="FALSE")
     parser.add_argument("-nums", nargs="?", default="FALSE")
     parser.add_argument("-uniprot_format", nargs="?", default="FALSE")
+    
     args = parser.parse_args()
     
-    clust_file = find_path(args.clust_file, "r")
-    out_prefix = find_path(args.out_prefix, "w")
+    options = {}
+    options["infile"] = args.infile
+    options["out_directory"] = args.out_directory   
+    options["codes"] = args.codes
+    options["nums"] = args.nums
+    options["uniprot_format"] = args.uniprot_format
     
-    alignment = read_alignment(clust_file)
-    alignment.set_disp_names(uniprot_format=args.uniprot_format)
+    return options
+    
+def main(options):
+    # if running on its own, will use command-line arguments; otherwise, pass arguments for this function
+    # options must be a dictionary of valid options for this module
+    
+    alignment = read_alignment(find_path(options["infile"], "r"))
+    alignment.set_disp_names(uniprot_format=options["uniprot_format"])
 
-    create_svg(alignment, out_prefix, codes=args.codes, nums=args.nums)
+    create_svg(alignment, find_path(options["out_directory"], "w") , codes=options["codes"], nums=options["nums"])
 
 if __name__ == "__main__":
-    main()
+    main(arguments())
 
