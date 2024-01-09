@@ -1,5 +1,5 @@
 # protein_alignment_tool
-NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are 
+NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are currently set with (presumably) default parameters. Settings can be found within the scripts for those who are curious.
 
 uniprot_fastas.py - Tool that takes one or more protein sequences (FASTA format) as input and BLASTs them against UniProt databases (RefProt and SwissProt). Saves annotations and FASTA sequences for each hit.
 
