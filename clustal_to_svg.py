@@ -1,6 +1,7 @@
 import protein_classes as pc
 import argparse
 import os
+import pandas as pd
 
 # this is the redesigned clustal_to_svg tool
 
@@ -13,12 +14,13 @@ def get_max_header(alignment, nums="FALSE"):
 
 def format_alignment(alignment, codes="FALSE", nums="FALSE"):
     ##### consider storing this formatted alignment, line by line, in an alignment object #####
+    ##### add a features list with feature objects and coordinates for each svg #####
     
     aa_count = 0
     lines = []
     mh = get_max_header(alignment, nums=nums)
     counts = {} # count of amino acids for each protein
-    prot1 = list(alignment.proteins.values())[0] # base everything around this first Protein object
+    prot1 = list(alignment.proteins.values())[0] # base sequence length around this first Protein object
     for i in range(0, len(prot1.sequence), 100):
         for name in alignment.proteins: # gives names only
             lines.append("") # start of a new line
@@ -35,7 +37,7 @@ def format_alignment(alignment, codes="FALSE", nums="FALSE"):
                 lines[-1] += f"  {str(counts[name])}"
         lines.append("") # start of new line
         if codes == "TRUE":
-            lines[-1] += " "*(mh+2) # start of code line; only +1 because one space is added regardless
+            lines[-1] += " "*(mh+2) # start of code line
             c = alignment.codes[i:i+100]
             for a in range(0, len(c), 10):
                 lines[-1] += c[a:a+10] + " "
@@ -43,7 +45,46 @@ def format_alignment(alignment, codes="FALSE", nums="FALSE"):
         lines.append("") # start of new line between blocks
     return lines
 
-def create_tspan(c, markup=None):
+def get_feature_coords(alignment, lines_per_svg=72, nums="FALSE"):
+    ##### return list of tuples with x and y coordinates for each svg (given the max number of lines)
+    x, y = 9.11, 20.274 # in px
+    char_width, line_height = 5.5, 11
+    width_gap = (701.576 - 127*char_width) / (125 + 2) # in px
+    height_gap = (827.5 - 72*line_height) / (72-1) # in px 
+      
+    lines_per_block = len(alignment.proteins) + 2
+    print(lines_per_block)
+    max_lines = int(lines_per_svg/lines_per_block) * lines_per_block # int rounds down, so this will be <= 72
+    max_blocks = int(max_lines / lines_per_block)
+    print(max_blocks)
+    
+    feature_dict = {} # {svg_num:[(f1, x, y), (f2, x, y), etc.], svg_num:[(f3, x, y), etc.], etc.}
+    for i, name in enumerate(alignment.proteins): # is the number of this protein in an "ordered" dictionary
+        protein = alignment.proteins[name]
+        for feature in protein.features:
+            # I realize this is all very repetitive...it was the only way I could think about it
+            tot_block_num = int(feature.clust_start / 100) + 1 # 1-indexed
+
+            svg_num = int(tot_block_num / max_blocks - 1 + min(1, tot_block_num % max_blocks)) # necessary for svg #
+            block_num = int(tot_block_num / (svg_num + 1))
+            char_num = int(feature.clust_start % 100) # necessary for x
+            char_num += int(char_num / 10) - 1 + min(1, char_num % 10) + 2 + get_max_header(alignment, nums=nums) # necessary for x; remove one character, then add it back if this is char_num % 10 is not 0
+            line_num = lines_per_block * (block_num - 1) + (i+1) # necessary for y
+            
+            x_coord = x + width_gap + (char_num - 1)*(char_width + width_gap) # fix later; this doesn't totally align; do it like height instead
+            y_coord = y + (line_num - 1)*(line_height + height_gap)
+            
+            if not feature_dict.get(svg_num):
+                feature_dict[svg_num] = []
+            feature_dict[svg_num].append((feature, x_coord, y_coord, protein.disp_name))
+            
+    return feature_dict
+
+def create_feature(feature, x, y):
+    ##### create the following for a transparent rectangle, and add it to the svg based on x and y of characters #####
+    return f"<rect x=\"{x}\" y=\"{y}\" width=\"5.5px\" height=\"11px\" style=\"fill:rgb(0,0,255);stroke-width:0;fill-opacity:.2;stroke:rgb(0,0,0)\" />"
+    
+def create_tspan(c, feature=None):
     # later, consider making this editable for things like active sites - maybe give proteins something to override this
     ##### ADD FEATURE MARKUP THAT WILL OVERRIDE COLORS LATER #####
     ##### CONSIDER PUTTING NON-COLOR MARKUP IN SEPARATE FUNCTION ######
@@ -82,11 +123,11 @@ def split_lines(lines, lines_per_block, lines_per_svg=72):
         
     return svg_list # list of lists
 
-def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE"):
+def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="TRUE"):
     # alignment is an Alignment object; out is the outfile path
     
     line_height = 1.25 # Adjust as needed; not sure if 1.25 is a good idea yet, but it's good enough for now
-    x, y = 9.317, 28.5
+    x, y = 9.317, 28.5 # in px; I have no idea why this doesn't match the rectangle y...figure out later
 
     # Format lines
     text = format_alignment(alignment, codes=codes, nums=nums) # returns list of lines
@@ -95,6 +136,9 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE"):
     svgs = split_lines(text, lines_per_block) # list of svgs with up to 72 lines each
 
     mh = get_max_header(alignment, nums=nums)
+    feature_coords = get_feature_coords(alignment, nums=nums)
+    
+    relevant_features = ["Active site"] # add more later
     
     for i, lines in enumerate(svgs):
 
@@ -112,7 +156,17 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE"):
             for c in line[mh+2:]:
                 svg += create_tspan(c)
             svg += f"</tspan>"
-        svg += f"</text></svg>"
+        svg += f"</text>"
+        # add in features
+        if features == "TRUE":
+            for f in feature_coords[i]:
+                feature = f[0]
+                if feature.feature_type in relevant_features:
+                    print(f"{feature.feature_type} found at {f[3]}, residue {feature.start}, {feature.clust_start}. Adding to {i}.svg.", flush=True)
+                    print(f"{f[1]}, {f[2]}\n", flush=True)
+                    svg += create_feature(f[0], f[1], f[2]) # feature, x, y
+            
+        svg += f"</svg>"
         
         out = f"{out_directory}{i}.svg"
         with open(out, "w") as o:
@@ -189,6 +243,7 @@ def arguments():
     parser.add_argument("-codes", nargs="?", default="FALSE")
     parser.add_argument("-nums", nargs="?", default="FALSE")
     parser.add_argument("-uniprot_format", nargs="?", default="FALSE")
+    parser.add_argument("-annotations", nargs="?", default=None)
     
     args = parser.parse_args()
     
@@ -198,16 +253,23 @@ def arguments():
     options["codes"] = args.codes
     options["nums"] = args.nums
     options["uniprot_format"] = args.uniprot_format
+    options["annotations"] = args.annotations
     
     return options
-    
+
 def main(options):
     # if running on its own, will use command-line arguments; otherwise, pass arguments for this function
     # options must be a dictionary of valid options for this module
     
     alignment = read_alignment(find_path(options["infile"], "r"))
     alignment.set_disp_names(uniprot_format=options["uniprot_format"])
-
+    
+    if options.get("annotations"):
+        annotations = pd.read_csv(find_path(options["annotations"], "r"), sep="\t")
+    else:
+        annotations = pd.DataFrame()
+    alignment.add_features(annotations) # add nothing if annotations aren't set
+    
     create_svg(alignment, find_path(options["out_directory"], "w") , codes=options["codes"], nums=options["nums"])
 
 if __name__ == "__main__":

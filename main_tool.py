@@ -69,7 +69,47 @@ def arguments():
     
     return options
 
-def main(options):
+
+# main_tool.py
+import argparse
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Centralized Tool Manager')
+    parser.add_argument('--common_arg', type=str, help='Common argument for all tools')
+    
+    subparsers = parser.add_subparsers(dest='retrieve_annotations', help='Tool to execute')
+    subparsers = parser.add_subparsers(dest='tool_name', help='Tool to execute')
+    subparsers = parser.add_subparsers(dest='tool_name', help='Tool to execute')
+    subparsers = parser.add_subparsers(dest='tool_name', help='Tool to execute')
+        
+    # Add sub-command parsers for each tool
+    # Example: tool1, tool2, tool3, tool4
+    # ...
+
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+
+    # Execute the selected tool
+    if args.tool_name == 'tool1':
+        # Call tool1.py with relevant arguments
+        # ...
+
+    elif args.tool_name == 'tool2':
+        # Call tool2.py with relevant arguments
+        # ...
+
+
+
+
+
+
+
+
+
+
+def main_archived(options):
     # if running on its own, will use command-line arguments; otherwise, pass arguments for this function
     # consider renaming
     
@@ -124,17 +164,29 @@ def main(options):
             alignment.main(opts)
             
         for i, ftup in enumerate(file_list):
-            prot_dir = "/".join(ftup[0].split("/")[:-1])
+            #prot_dir = "/".join(ftup[1].split("/")[:-1]) # use the previous_out_directory
             title = opts["title"]
-            file_list[i] = (f"{prot_dir}/{title}.clustal_num", ftup[1])
+            file_list[i] = (f"{out_directory}/{title}.clustal_num", ftup[1])
     
     if module in ["clust_to_svg", "align_svg", "all"]:
         for infile, out_directory in file_list:
+            # set annotation files if exist/if they were generated in this run
+            if mod_options.get("clust_to_svg").get("annotations"):
+                mod_options["clust_to_svg"]["annotations"] = find_path(mod_options["clust_to_svg"]["annotations"], "r")
+            elif module in ["align_svg", "all"]:
+                prot_dir = "/".join(infile.split("/")[:-1])
+                mod_options["clust_to_svg"]["annotations"] = find_path(f"{prot_dir}/all.ann", "r")
+            else:
+                print("Proceeding without annotations.\n", flush=True)
+                
             universal_options["infile"] = infile
             universal_options["out_directory"] = out_directory + "/svg_alignments/" # hardcoded...consider allowing options later
             opts = {**mod_options["clust_to_svg"], **universal_options}
             print(f"Running clustal_to_svg.py with the following options: {opts}", flush=True)
             cts.main(opts)
             
+            
+### split all of this into simpler parts; make extra script to run things all at once maybe
+### add retrieve_annotations.py
 if __name__ == "__main__":
     main(arguments())

@@ -3,7 +3,7 @@
 
 ##### FIRST MAKE A CLEAN ALIGNMENT STRUCTURE #####
 
-# need to deconstruct clsutal output and save it in protein object
+# need to deconstruct clustal output and save it in protein object
 # sequences must be aligned for this to work, regardless of input format
 
 class Protein:
@@ -42,7 +42,7 @@ class Protein:
 
 class Alignment:
     def __init__(self):
-        self.proteins = {} # dictionary of Proteins; keys are Protein.name
+        self.proteins = {} # dictionary of Proteins; keys are Protein.name; consider using just a list...
         # later, consider making this editable for things like active sites - maybe give proteins something to override this
         self.codes = ""
         self.max_header = None
@@ -62,6 +62,21 @@ class Alignment:
             length = max(len(self.proteins[name].seq_raw), length)
         return length
     
+    def add_features(self, annotations):
+        for row in annotations.itertuples(index=False):
+            
+            feature_type = row[annotations.columns.get_loc("type")]
+            start = row[annotations.columns.get_loc("location.start.value")]
+            end = row[annotations.columns.get_loc("location.end.value")]
+            
+            feature = Feature(feature_type, start, end, row.description)
+
+            self.proteins[row.whole_prot].add_feature(feature)
+    
+    def get_features(self):
+        ##### set/get feature coordinates(?) #####
+        return feature_coords
+    
     def set_disp_names(self, length=1000, uniprot_format="FALSE"):
         # Length set to 1000 just so full length is kept; change later maybe
         for name in self.proteins:
@@ -77,7 +92,8 @@ class Feature:
         self.clust_start = None
         self.clust_end = None
         self.description = description
-    
+        # consider adding self.sequence in order to identify later...
+        
     def set_clust_positions(self, clust_start, clust_end): # clustal positions based on start and end
         self.clust_start = clust_start
         self.clust_end = clust_end

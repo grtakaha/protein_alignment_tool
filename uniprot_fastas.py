@@ -165,6 +165,7 @@ def arguments():
     parser.add_argument("-stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
     parser.add_argument("-email")
     parser.add_argument("-num_res", default="10")
+    #parser.add_arugmnet("-blast", default="TRUE") # fix later; add another tool; retrieve_annotations.py so that these are not tied
     
     args = parser.parse_args()
     
@@ -208,7 +209,7 @@ def main(options):
         prot_directory = find_path(f"{out_directory}/{protein}/", action="w")     
         with open(f"{prot_directory}/all.fasta", "w") as all_fasta:
             all_fasta.write(f"{accession[0]}QUERY_{accession[1:]}\n{sequence}\n") # just overwriting it if it exists
-
+            
     for protein in blast_dict:
         # run blast_ids all at once and then retrieve all at once
         blast_results = api_tools.get_blast_results(blast_dict[protein]) # consider retrieving ids all at once, then getting results one by one after running
@@ -221,6 +222,7 @@ def main(options):
         with open(f"{prot_directory}/{protein}.tsv", "w") as tsv:
             tsv.write(blast_results[1])         
         
+        features_df_list = []
         # parse blast_results[1] (tsv form)
         for line in blast_results[1].split("\n")[1:-1]: # skip first line (headers) and last line (empty); don't bother reading into a dataframe
             hit = line.split("\t")[2]
@@ -241,8 +243,15 @@ def main(options):
             else:
                 print(f"Could not retrieve features for {hit}...continuing with empty DataFrame\n", flush=True)
                 features_df = pd.DataFrame(columns=["type","description","evidences","location.start.value","location.start.modifier","location.end.value","location.end.modifier"])
-    
+
             features_df.to_csv(f"{prot_directory}/{hit_filename}.ann", sep="\t")
-        
+            
+            features_df.insert(0, "prot", hit_filename)
+            features_df.insert(1, "whole_prot", hit_fasta.split("\n")[0].split(" ")[0][1:])
+            features_df_list.append(features_df)
+            
+        all_features_df = pd.concat(features_df_list, axis=0, join='outer')    
+        all_features_df.to_csv(f"{prot_directory}/all.ann", sep="\t")
+                
 if __name__ == "__main__":
     main(arguments())
