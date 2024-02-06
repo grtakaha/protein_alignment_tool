@@ -15,8 +15,8 @@ class Protein:
         self.features = []
 
     def add_feature(self, feature):
-        clust_start = None
-        clust_end = None
+        clust_start = None # 1-indexed
+        clust_end = None # 1-indexed
         
         raw_count = 1
         clust_count = 1        
@@ -46,7 +46,25 @@ class Alignment:
         # later, consider making this editable for things like active sites - maybe give proteins something to override this
         self.codes = ""
         self.max_header = None
-        
+        self.conserved_res = [] # list of clust_positions for conserved residues
+    
+    def set_conserved_res(self):
+        # sets conserved residues only on an external call
+        i = 1
+        prot_list = list(self.proteins.values())
+        while i <= len(prot_list[0].sequence): # break out when sequences have been entirely gone through
+            conserved = True
+            c0 = prot_list[0].sequence[i-1]
+            for p in prot_list[1:]:
+                c_new = p.sequence[i-1]
+                if c0 != c_new or c0 == "-" or c_new == "-":
+                    conserved = False
+                    break # breaks out of this inner for loop
+                
+            if conserved:
+                self.conserved_res.append((c0, i))
+            i += 1
+            
     def add_protein(self, protein):
         self.proteins[protein.name] = protein
     
@@ -70,7 +88,6 @@ class Alignment:
             end = row[annotations.columns.get_loc("location.end.value")]
             
             feature = Feature(feature_type, start, end, row.description)
-
             self.proteins[row.whole_prot].add_feature(feature)
     
     def get_features(self):

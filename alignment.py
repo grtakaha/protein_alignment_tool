@@ -80,47 +80,59 @@ def find_path(path, action):
             os.makedirs(parents)
     return abspath
 
-def arguments():
+#def arguments():
+    #parser = argparse.ArgumentParser()
+    
+    #parser.add_argument("-infile")
+    #parser.add_argument("-out_directory", default="./test_runs/test/")
+    #parser.add_argument("-stype", default="protein")
+    #parser.add_argument("-email")
+    #parser.add_argument("-title", default="alignment")
+    
+    #args = parser.parse_args()
+    
+    #options = {}
+    #options["infile"] = args.infile
+    #options["out_directory"] = args.out_directory
+    #options["stype"] = args.stype
+    #options["title"] = args.title
+    #options["email"] = args.email
+    
+    #return options
+def parse_args():
     parser = argparse.ArgumentParser()
     
-    parser.add_argument("-infile")
-    parser.add_argument("-out_directory", default="./test_runs/test/")
-    parser.add_argument("-stype", default="protein")
-    parser.add_argument("-email")
-    parser.add_argument("-title", default="alignment")
-    
-    args = parser.parse_args()
-    
-    options = {}
-    options["infile"] = args.infile
-    options["out_directory"] = args.out_directory
-    options["stype"] = args.stype
-    options["title"] = args.title
-    options["email"] = args.email
-    
-    return options
+    parser.add_argument("-i", "--infile")
+    parser.add_argument("-o", "--out_directory", default="./test_runs/test/")
+    parser.add_argument("-s", "--stype", default="protein")
+    parser.add_argument("-e", "--email")
+    parser.add_argument("-t", "--title", default="alignment")
 
-def main(options):
+    return parser.parse_args()
+
+def main():
+    
+    args = parse_args()
     # if running on its own, will use command-line arguments; otherwise, pass arguments for this function
     # options must be a dictionary of valid options for this module
     
-    infile = find_path(options["infile"], action="r")
+    infile = find_path(args.infile, action="r")
     print(f"Processing sequences from {infile} \n", flush=True)
     with open(infile, "r") as f:
         seqs = "".join(f.readlines())
     
-    out_directory = find_path(options["out_directory"], action="w")
+    out_directory = find_path(args.out_directory, action="w")
     print(f"Storing outputs in {out_directory}\n", flush=True)
     
-    stype = options["stype"]
+    stype = args.stype
     if stype not in ["dna", "protein"]:
         print("Given stype not found. Please specify \"-stype dna\" OR \"-stype protein\n", flush=True)
         print("Defaulting to stype=\"protein\"\n", flush=True)
         stype = "protein"  
     
-    title = options["title"]
+    title = args.title
     
-    ID = api_tools.align(options["email"], stype, title, seqs)
+    ID = api_tools.align(args.email, stype, title, seqs)
     alignment = api_tools.get_alignment(ID)
     
     alignment_file = f"{out_directory}/{title}.clustal_num"
@@ -130,4 +142,4 @@ def main(options):
         f.write(alignment) # just overwriting it if it exists
         
 if __name__ == "__main__":
-    main(arguments())
+    main()

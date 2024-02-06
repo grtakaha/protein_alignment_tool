@@ -65,37 +65,69 @@ def fasta_to_df(file):
                 seqs[-1] += line.strip()
     return pd.DataFrame({"Accession": accessions, "IDs": ids, "Sequence": seqs}).set_index("IDs")
 
-def arguments():
+#def arguments():
+    #parser = argparse.ArgumentParser()
+    
+    #parser.add_argument("-infile")
+    #parser.add_argument("-out_directory", default="./test_runs/test/")
+    #parser.add_argument("-email")
+    ##parser.add_arugmnet("-blast", default="TRUE") # fix later; add another tool; retrieve_annotations.py so that these are not tied
+    
+    #args = parser.parse_args()
+    
+    #options = {}
+    #options["infile"] = args.infile
+    #options["out_directory"] = args.out_directory
+    #options["email"] = args.email
+    
+    #return options   
+
+def parse_args():
     parser = argparse.ArgumentParser()
     
-    parser.add_argument("-infile")
-    parser.add_argument("-out_directory", default="./test_runs/test/")
-    parser.add_argument("-email")
+    parser.add_argument("-i", "--infile") # one or more sequences in FASTA format
+    parser.add_argument("-o", "--out_directory", default="./test_runs/test/")
     #parser.add_arugmnet("-blast", default="TRUE") # fix later; add another tool; retrieve_annotations.py so that these are not tied
     
-    args = parser.parse_args()
-    
-    options = {}
-    options["infile"] = args.infile
-    options["out_directory"] = args.out_directory
-    options["email"] = args.email
-    
-    return options   
-    
-def main(options):
+    return parser.parse_args()   
 
-    infile = find_path(options["infile"], action="r")    
+def remove_query(df):
+    for p in df.index.values:
+        acc = df.loc[p, "Accession"]
+        if type(acc) == pd.Series:
+            for i in range(len(acc)):
+                a = acc[i]
+                if "QUERY_" in a:
+                    df = df[df["Accession"] != a]       
+        else:
+            if "QUERY_" in acc:
+                df = df.drop(df[df["Accession"] == acc].index)
+    return df
+    
+def main():
+
+    args = parse_args()
+
+    infile = find_path(args.infile, action="r")    
     print(f"Processing sequences from {infile}\n", flush=True)
     proteins = []
     if infile.endswith(".fasta"):
         infile_df = fasta_to_df(infile)
+        infile_df = remove_query(infile_df)
         for p in infile_df.index.values:
-            proteins.append((p, infile_df.loc[p, "Accession"][1:].split(" ")[0]))
+            if type(infile_df.loc[p, "Accession"]) == pd.Series:
+                # only use the first accession that IS NOT the query
+                acc = infile_df.loc[p, "Accession"][0][1:]
+                print(f"Duplicate accessions for ID: {p}.\nProceeding with {acc}.\n", flush=True)
+            else:
+                acc = infile_df.loc[p, "Accession"][1:]
+            proteins.append((p, acc.split(" ")[0])) # cannot handle when something is labeled "QUERY", but has the same uniprot ID
     elif infile.endswith(".clustal") or infile.endswith(".clustal_num"):
         alignment = cts.read_alignment(infile)
         for whole_prot in alignment.proteins:
             proteins.append((whole_prot.split(" ")[0].split("|")[-1], whole_prot))
-    out_directory = find_path(options["out_directory"], action="w")
+            
+    out_directory = find_path(args.out_directory, action="w")
     print(f"Storing outputs in {out_directory}\n", flush=True)
     
     features_df_list = []
@@ -121,4 +153,4 @@ def main(options):
     all_features_df.to_csv(f"{out_directory}/all.ann", sep="\t")        
         
 if __name__ == "__main__":
-    main(arguments())
+    main()

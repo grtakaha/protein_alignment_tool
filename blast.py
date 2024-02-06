@@ -157,37 +157,53 @@ def fasta_to_df(file):
                 seqs[-1] += line.strip()
     return pd.DataFrame({"Accession": accessions, "IDs": ids, "Sequence": seqs}).set_index("IDs")
 
-def arguments():
+#def arguments():
+    #parser = argparse.ArgumentParser()
+    
+    #parser.add_argument("-infile")
+    #parser.add_argument("-out_directory", default="./test_runs/test/")
+    #parser.add_argument("-stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
+    #parser.add_argument("-email")
+    #parser.add_argument("-num_res", default="10")
+    ##parser.add_arugmnet("-blast", default="TRUE") # fix later; add another tool; retrieve_annotations.py so that these are not tied
+    
+    #args = parser.parse_args()
+    
+    #options = {}
+    #options["infile"] = args.infile
+    #options["out_directory"] = args.out_directory
+    #options["stype"] = args.stype
+    #options["email"] = args.email
+    #options["num_res"] = args.num_res
+    
+    #return options   
+    
+    
+def parse_args():
     parser = argparse.ArgumentParser()
     
-    parser.add_argument("-infile")
-    parser.add_argument("-out_directory", default="./test_runs/test/")
-    parser.add_argument("-stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
-    parser.add_argument("-email")
-    parser.add_argument("-num_res", default="10")
+    parser.add_argument("-i", "--infile")
+    parser.add_argument("-o", "--out_directory", default="./")
+    parser.add_argument("-s", "--stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
+    parser.add_argument("-e", "--email")
+    parser.add_argument("-n", "--num_res", default="10")
     #parser.add_arugmnet("-blast", default="TRUE") # fix later; add another tool; retrieve_annotations.py so that these are not tied
     
-    args = parser.parse_args()
-    
-    options = {}
-    options["infile"] = args.infile
-    options["out_directory"] = args.out_directory
-    options["stype"] = args.stype
-    options["email"] = args.email
-    options["num_res"] = args.num_res
-    
-    return options   
-    
-def main(options):
+    return parser.parse_args()
+        
+def main():
 
-    infile = find_path(options["infile"], action="r")    
+    args = parse_args()
+
+    infile = find_path(args.infile, action="r")    
     print(f"Processing sequences from {infile}\n", flush=True)
     infile_df = fasta_to_df(infile)
     
-    out_directory = find_path(options["out_directory"], action="w")
+    out_directory = find_path(args.out_directory, action="w")
     print(f"Storing outputs in {out_directory}\n", flush=True)
     
-    stype = options["stype"]
+    # add in translation feature later maybe...or just remove dna
+    stype = args.stype
     if stype == "dna":
         program = "blastx"
     elif stype == "protein":
@@ -203,7 +219,7 @@ def main(options):
         sequence = infile_df.loc[protein]["Sequence"]
         accession = infile_df.loc[protein]["Accession"] # includes ">"
         
-        blast_id = api_tools.blast(options["email"], program, stype, protein, sequence, num_res=options["num_res"])
+        blast_id = api_tools.blast(args.email, program, stype, protein, sequence, num_res=args.num_res)
         blast_dict[protein] = blast_id
         
         prot_directory = find_path(f"{out_directory}/{protein}/", action="w")     
@@ -231,27 +247,8 @@ def main(options):
             hit_filename = hit_fasta.split("\n")[0].split(" ")[0].split("|")[-1]
             with open(f"{prot_directory}/{hit_filename}.fasta", "w") as fasta:
                 fasta.write(hit_fasta)
-            hit_metadata = api_tools.get_metadata(hit)
-            with open(f"{prot_directory}/{hit_filename}.json", "w") as json:
-                json.write(str(hit_metadata))
             with open(f"{prot_directory}/all.fasta", "a") as all_fasta:
                 all_fasta.write(hit_fasta)
-
-            features = hit_metadata.get("features")
-            if features is not None:
-                features_df = pd.json_normalize(features)
-            else:
-                print(f"Could not retrieve features for {hit}...continuing with empty DataFrame\n", flush=True)
-                features_df = pd.DataFrame(columns=["type","description","evidences","location.start.value","location.start.modifier","location.end.value","location.end.modifier"])
-
-            features_df.to_csv(f"{prot_directory}/{hit_filename}.ann", sep="\t")
-            
-            features_df.insert(0, "prot", hit_filename)
-            features_df.insert(1, "whole_prot", hit_fasta.split("\n")[0].split(" ")[0][1:])
-            features_df_list.append(features_df)
-            
-        all_features_df = pd.concat(features_df_list, axis=0, join='outer')    
-        all_features_df.to_csv(f"{prot_directory}/all.ann", sep="\t")
                 
 if __name__ == "__main__":
-    main(arguments())
+    main()
