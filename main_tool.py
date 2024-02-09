@@ -4,7 +4,6 @@ import os
 import time
 import pandas as pd
 import json
-import uniprot_fastas as uf
 import alignment
 import clustal_to_svg as cts
 import subprocess
@@ -72,7 +71,6 @@ def find_path(path, action):
 
 
 # main_tool.py
-import argparse
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Centralized Tool Manager')
