@@ -59,6 +59,25 @@ class api_tools():
         
         return response.text
     
+    def get_pim(ID):
+        url = f"https://www.ebi.ac.uk/Tools/services/rest/clustalo/result/{ID}/pim"
+        
+        # rerun the request until it returns 200
+        # it's possible this becomes an endless loop...deal with that later
+        while True:
+            try:
+                response = requests.get(url)
+                if response.status_code != 200:
+                    print(f"PIM retrieval status code: {response.status_code}. Retrying...\n", flush=True)
+                else:
+                    break
+            except Exception as e:
+                print(f"Exception occurred when trying to retrieve PIM for {ID}:\n{e}\nRetrying...\n", flush=True)
+            time.sleep(5) # wait 5 seconds in-between tries
+        print(f"PIM found for {ID}.\n", flush=True)
+        
+        return response.text
+    
 def find_path(path, action):
     ''' Returns full path based on current working directory.
     Current working directory is where this script was run, not where it was stored.
@@ -134,12 +153,16 @@ def main():
     
     ID = api_tools.align(args.email, stype, title, seqs)
     alignment = api_tools.get_alignment(ID)
+    pim = api_tools.get_pim(ID)
     
     alignment_file = f"{out_directory}/{title}.clustal_num"
+    pim_file = f"{out_directory}/{title}.pim"
     
     print(f"Saving {title} alignment to {alignment_file}.", flush=True)
     with open(alignment_file, "w") as f:
         f.write(alignment) # just overwriting it if it exists
+    with open(pim_file, "w") as p:
+        p.write(pim) # just overwriting if it exists
         
 if __name__ == "__main__":
     main()
