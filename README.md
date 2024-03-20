@@ -37,15 +37,15 @@ Example usage from main_tool.py:\
 optional arguments:\
   &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
   &ensp;-s STYPE, --stype STYPE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
   &ensp;-e EMAIL, --email EMAIL\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
   &ensp;-nr NUM_RES, --num_res NUM_RES\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.
 
 
 # retrieve_annotations.py
@@ -71,9 +71,9 @@ Example usage from main_tool.py:\
 optional arguments:\
   &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".
 
 
 # alignment.py
@@ -93,15 +93,15 @@ Example usage from main_tool.py:\
 optional arguments:\
   &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
   &ensp;-s STYPE, --stype STYPE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
   &ensp;-e EMAIL, --email EMAIL\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
   &ensp;-t TITLE, --title TITLE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim
 
 
 # clustal_to_svg.py
@@ -118,22 +118,22 @@ Example usage:\
 
 Example usage from main_tool.py:\
   &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] svg [-h] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
-                                                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;[-a ANNOTATIONS]
+                                                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[-a ANNOTATIONS]
 
 optional arguments:\
   &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
   &ensp;-c CODES, --codes CODES\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.\
   &ensp;-n NUMS, --nums NUMS\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add total residue numbers to the right side of every line.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add total residue numbers to the right side of every line.\
   &ensp;-u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA\
   &ensp;-a ANNOTATIONS, --annotations ANNOTATIONS\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
 
 
 # main_tool.py
@@ -154,49 +154,49 @@ Centralized Tool Manager
 
 positional arguments:\
   &ensp;{blast,annotate,align,svg,multi}\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Tool to execute
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Tool to execute
 
 optional arguments:\
   &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
   &ensp;-ord ORDER [ORDER ...], --order ORDER [ORDER ...]\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Order of tools to run if "multi" is used as a positional argument. There are currently limited ways to run multi (inputs and outputs will vary depending on start and end):\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align svg\
-			&emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate svg\
-			&emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align\
-			&emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align svg\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate align svg\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate align\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate svg\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align annotate svg\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align annotate\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align svg\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Order of tools to run if "multi" is used as a positional argument. There are currently limited ways to run multi (inputs and outputs will vary depending on start and end):\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align svg\
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate svg\
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align\
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate align svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate align\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align annotate svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align annotate\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;svg\
   &ensp;-s STYPE, --stype STYPE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
   &ensp;-e EMAIL, --email EMAIL\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
   &ensp;-nr NUM_RES, --num_res NUM_RES\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.\
   &ensp;-t TITLE, --title TITLE\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim\
   &ensp;-c CODES, --codes CODES\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.\
   &ensp;-n NUMS, --nums NUMS\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add total residue numbers to the right side of every line.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add total residue numbers to the right side of every line.\
   &ensp;-u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA\
   &ensp;-a ANNOTATIONS, --annotations ANNOTATIONS\
-                        &emsp;&emsp;&nbsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
 
 
 # ANNOTATION FORMAT
