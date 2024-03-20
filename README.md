@@ -3,9 +3,13 @@ Collection of scripts used to visualize protein sequences.
 NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are currently set with (presumably) default parameters. Settings can be found within the scripts for those who are curious.
 
 # REQUIREMENTS
-	&emsp;&emsp;Internet connection
+General:\
+	&emsp;&emsp;Internet connection\
 	&emsp;&emsp;Python 3.7+
-	&emsp;&emsp;pandas (Python library)
+
+Python Libraries:\
+	&emsp;&emsp;pandas
+	&emsp;&emsp;requests
 
 # blast.py
 
