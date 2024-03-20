@@ -205,12 +205,12 @@ As of 2024.03.19, only annotations of type "Active site" will be used. This will
 
 Annotation files that include the following columns and VALUES (tab-delimited) can be used as inputs for clustal_to_svg.py:
 
-	prot	whole_prot	type	location.start.value	location.end.value\
-ARBITRARY_INDEX	UNIPROT_FORMAT_ACC	FULL_ACCESSION	ANNOTATION_TYPE	START	END
+		prot	whole_prot	type	location.start.value	location.end.value
+	ARBITRARY_INDEX	UNIPROT_FORMAT_ACC	FULL_ACCESSION	ANNOTATION_TYPE	START	END
 
 A real example might look like:
 
-	prot	whole_prot	type	location.start.value	location.end.value\
-0	PAPA1_CARPA	sp|P00784|PAPA1_CARPA	Active site	158	158
+		prot	whole_prot	type	location.start.value	location.end.value
+	0	PAPA1_CARPA	sp|P00784|PAPA1_CARPA	Active site	158	158
 
 An example of a valid annotation file can be found in annotation_example.ann
