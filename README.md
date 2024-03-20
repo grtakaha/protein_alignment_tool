@@ -8,12 +8,12 @@ blast.py - Tool that takes one or more protein sequences (FASTA format) as input
 
 NOTE: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
 
-## INPUT: FASTA-formatted file with at least one sequence.
+**INPUT: FASTA-formatted file with at least one sequence**
 
-## OUTPUT: a set of directories - one for each sequence in the original input file - that contain the following:\
-	&emsp;&emsp;the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)\
-	&emsp;&emsp;individual FASTA files with UniProt sequences for each BLAST hit\
-	&emsp;&emsp;one FASTA file containing all protein sequences, including the query sequence (all.fasta)
+**OUTPUT: a set of directories - one for each sequence in the original input file - that contain the following:\**
+	**&emsp;&emsp;the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)\**
+	**&emsp;&emsp;individual FASTA files with UniProt sequences for each BLAST hit\**
+	**&emsp;&emsp;one FASTA file containing all protein sequences, including the query sequence (all.fasta)**
 
 If used in a "multi" run, downstream commands will be run on each resulting collection of outputs.
 
