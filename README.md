@@ -1,6 +1,11 @@
 Collection of scripts used to visualize protein sequences.
- 
+
 NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are currently set with (presumably) default parameters. Settings can be found within the scripts for those who are curious.
+
+# REQUIREMENTS
+	&emsp;&emsp;Internet connection
+	&emsp;&emsp;Python 3.7+
+	&emsp;&emsp;pandas (Python library)
 
 # blast.py
 
@@ -106,6 +111,7 @@ OUTPUT: A sequential set of SVGs (.svg), numbered 0, 1, 2, etc., with formatted 
 Example usage:\
   &ensp;python clustal_to_svg.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
                            &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;[-a ANNOTATIONS]
+
 Example usage from main_tool.py:\
   &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] svg [-h] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
                                                          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;[-a ANNOTATIONS]
@@ -126,84 +132,90 @@ optional arguments:\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
 
 
-***** MAIN_TOOL.PY INSTRUCTIONS *****
-main_tool.py - Runs one, two, or all of the above in the order given
-Infile is dependent on which tool(s) are being executed. Infile should match that of the first tool being executed. Example: --order blast align svg -> use the infile format for blast.py
+# main_tool.py
 
-Example usage: 
-python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] {blast,annotate,align,svg,multi} [-h] [-ord ORDER [ORDER ...]] 
-                                                                                    [-s STYPE] [-e EMAIL]
-                                                                                    [-nr NUM_RES] [-t TITLE] [-c CODES] [-n NUMS]
-                                                                                    [-u UNIPROT_FORMAT] [-a ANNOTATIONS]
+Runs one, two, or all of the above in the order given.
+
+INPUT: Depends on which tool(s) are being executed. Should be an acceptable input of the first tool being executed. Inputs for runs that start with annotate.py may additionally be limited by what can be passed to downstream tools.  Example: multi --order annotate svg -> must use .clustal or .clustal_num file as input (.fasta file cannot be used by clustal_to_svg.py)
+
+OUTPUT: Depends on which tool(s) are being executed. Each tool will have its own output if it is included in a run. All outputs will be split into separate directories in a multi run that includes blast.py.
+
+Example usage:\
+  &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] {blast,annotate,align,svg,multi} [-h] [-ord ORDER [ORDER ...]]\
+                                                                                      &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;[-s STYPE] [-e EMAIL]\
+                                                                                      &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;[-nr NUM_RES] [-t TITLE] [-c CODES] [-n NUMS]\
+                                                                                      &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;[-u UNIPROT_FORMAT] [-a ANNOTATIONS]
 
 Centralized Tool Manager
 
-positional arguments:
-  {blast,annotate,align,svg,multi}
-                        Tool to execute
+positional arguments:\
+  &ensp;{blast,annotate,align,svg,multi}\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Tool to execute
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INFILE, --infile INFILE
-                        Full path of input file.
-  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
-                        Full path of output directory. Must end with "/".
-  -ord ORDER [ORDER ...], --order ORDER [ORDER ...]
-                        Order of tools to run if "multi" is used as a positional argument. There are currently limited ways to run multi (inputs and outputs will vary depending on start and end):
-                        blast annotate align svg
-			blast align annotate svg
-			blast annotate align
-			blast align annotate
-                        blast annotate
-                        blast align svg
-                        blast align
-                        blast
-                        annotate align svg
-                        annotate align
-                        annotate svg
-                        annotate
-                        align svg
-                        align
-                        svg
-  -s STYPE, --stype STYPE
-                        Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.
-  -e EMAIL, --email EMAIL
-                        Personal email. Used to submit BLAST and Clustal Omega jobs.
-  -nr NUM_RES, --num_res NUM_RES
-                        Number of results.
-  -t TITLE, --title TITLE
-                        Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim
-  -c CODES, --codes CODES
-                        Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.
-  -n NUMS, --nums NUMS
-                        Default FALSE. If TRUE, will add total residue numbers to the right side of every line.
-  -u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT
-                        Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA
-  -a ANNOTATIONS, --annotations ANNOTATIONS
-                        Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
-***** END OF MAIN_TOOL.PY INSTRUCTIONS *****
+optional arguments:\
+  &ensp;-h, --help            &emsp;&emsp;&emsp;show this help message and exit\
+  &ensp;-i INFILE, --infile INFILE\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+  &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
+  &ensp;-ord ORDER [ORDER ...], --order ORDER [ORDER ...]\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Order of tools to run if "multi" is used as a positional argument. There are currently limited ways to run multi (inputs and outputs will vary depending on start and end):\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align svg\
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate svg\
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align\
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate align svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate align\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align annotate svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align annotate\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;svg\
+  &ensp;-s STYPE, --stype STYPE\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
+  &ensp;-e EMAIL, --email EMAIL\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
+  &ensp;-nr NUM_RES, --num_res NUM_RES\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.\
+  &ensp;-t TITLE, --title TITLE\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim\
+  &ensp;-c CODES, --codes CODES\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.\
+  &ensp;-n NUMS, --nums NUMS\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add total residue numbers to the right side of every line.\
+  &ensp;-u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA\
+  &ensp;-a ANNOTATIONS, --annotations ANNOTATIONS\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
 
-***** ANNOTATION FORMAT *****
+
+# ANNOTATION FORMAT
+
 As of 2024.03.19, only annotations of type "Active site" will be used. This will be updated in the future.
+
 Annotation files that include the following columns and VALUES (tab-delimited) can be used as inputs for clustal_to_svg.py:
-	prot	whole_prot	type	location.start.value	location.end.value
-ARBITRARY_INDEX	UNIPROT_FORMAT_ACC	FULL_ACCESSION	ANNOTATION_TYPE	START	END
+
+&emsp;&emsp;prot&emsp;&emsp;whole_prot&emsp;&emsp;type&emsp;&emsp;location.start.value&emsp;&emsp;location.end.value
+ARBITRARY_INDEX&emsp;&emsp;UNIPROT_FORMAT_ACC&emsp;&emsp;FULL_ACCESSION	ANNOTATION_TYPE&emsp;&emsp;START&emsp;&emsp;END
 
 Example of a valid annotation file:
 
-	prot	whole_prot	type	description	evidences	location.start.value	location.start.modifier	location.end.value	location.end.modifier	featureId	featureCrossReferences	ligand.name	ligand.id	ligand.note	alternativeSequence.originalSequence	alternativeSequence.alternativeSequences
-0	A0A164XSU3_DAUCS	tr|A0A164XSU3|A0A164XSU3_DAUCS	Signal		[{'evidenceCode': 'ECO:0000256', 'source': 'SAM', 'id': 'SignalP'}]	1	EXACT	27	EXACT							
-1	A0A164XSU3_DAUCS	tr|A0A164XSU3|A0A164XSU3_DAUCS	Chain	Cysteine protease	[{'evidenceCode': 'ECO:0000256', 'source': 'SAM', 'id': 'SignalP'}]	28	EXACT	354	EXACT	PRO_5018759784						
-2	A0A164XSU3_DAUCS	tr|A0A164XSU3|A0A164XSU3_DAUCS	Domain	Cathepsin propeptide inhibitor	[{'evidenceCode': 'ECO:0000259', 'source': 'SMART', 'id': 'SM00848'}]	50	EXACT	106	EXACT							
-3	A0A164XSU3_DAUCS	tr|A0A164XSU3|A0A164XSU3_DAUCS	Domain	Peptidase C1A papain C-terminal	[{'evidenceCode': 'ECO:0000259', 'source': 'SMART', 'id': 'SM00645'}]	136	EXACT	351	EXACT							
-0	PAPA2_CARPA	sp|P14080|PAPA2_CARPA	Signal		[{'evidenceCode': 'ECO:0000255'}]	1	EXACT	18	EXACT							
-1	PAPA2_CARPA	sp|P14080|PAPA2_CARPA	Propeptide	Activation peptide	[{'evidenceCode': 'ECO:0000269', 'source': 'PubMed', 'id': '2106878'}, {'evidenceCode': 'ECO:0000269', 'source': 'PubMed', 'id': '2500950'}]	19	EXACT	134	EXACT	PRO_0000026408						
-2	PAPA2_CARPA	sp|P14080|PAPA2_CARPA	Chain	Chymopapain		135	EXACT	352	EXACT	PRO_0000026409						
-3	PAPA2_CARPA	sp|P14080|PAPA2_CARPA	Active site		[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10088'}]	159	EXACT	159	EXACT							
-4	PAPA2_CARPA	sp|P14080|PAPA2_CARPA	Active site		[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10089'}]	293	EXACT	293	EXACT							
-5	PAPA2_CARPA	sp|P14080|PAPA2_CARPA	Active site		[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10090'}]	313	EXACT	313	EXACT							
-6	PAPA2_CARPA	sp|P14080|PAPA2_CARPA	Glycosylation	N-linked (GlcNAc...) asparagine	[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU00498'}]	86	EXACT	86	EXACT							
-							
-***** END OF ANNOTATION FORMAT *****
-
-Requires internet connection.
+&emsp;&emsp;prot&emsp;&emsp;whole_prot&emsp;&emsp;type&emsp;&emsp;description&emsp;&emsp;evidences&emsp;&emsp;location.start.value&emsp;&emsp;location.start.modifier&emsp;&emsp;location.end.value&emsp;&emsp;location.end.modifier&emsp;&emsp;featureId&emsp;&emsp;featureCrossReferences&emsp;&emsp;ligand.name&emsp;&emsp;ligand.id&emsp;&emsp;ligand.note&emsp;&emsp;alternativeSequence.originalSequence&emsp;&emsp;alternativeSequence.alternativeSequences
+0&emsp;&emsp;A0A164XSU3_DAUCS&emsp;&emsp;tr|A0A164XSU3|A0A164XSU3_DAUCS&emsp;&emsp;Signal&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000256', 'source': 'SAM', 'id': 'SignalP'}]&emsp;&emsp;1&emsp;&emsp;EXACT&emsp;&emsp;27&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+1&emsp;&emsp;A0A164XSU3_DAUCS&emsp;&emsp;tr|A0A164XSU3|A0A164XSU3_DAUCS&emsp;&emsp;Chain&emsp;&emsp;Cysteine protease&emsp;&emsp;[{'evidenceCode': 'ECO:0000256', 'source': 'SAM', 'id': 'SignalP'}]&emsp;&emsp;28&emsp;&emsp;EXACT&emsp;&emsp;354&emsp;&emsp;EXACT&emsp;&emsp;PRO_5018759784&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+2&emsp;&emsp;A0A164XSU3_DAUCS&emsp;&emsp;tr|A0A164XSU3|A0A164XSU3_DAUCS&emsp;&emsp;Domain&emsp;&emsp;Cathepsin propeptide inhibitor&emsp;&emsp;[{'evidenceCode': 'ECO:0000259', 'source': 'SMART', 'id': 'SM00848'}]&emsp;&emsp;50&emsp;&emsp;EXACT&emsp;&emsp;106&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+3&emsp;&emsp;A0A164XSU3_DAUCS&emsp;&emsp;tr|A0A164XSU3|A0A164XSU3_DAUCS&emsp;&emsp;Domain&emsp;&emsp;Peptidase C1A papain C-terminal&emsp;&emsp;[{'evidenceCode': 'ECO:0000259', 'source': 'SMART', 'id': 'SM00645'}]&emsp;&emsp;136&emsp;&emsp;EXACT&emsp;&emsp;351&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+0&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Signal&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000255'}]&emsp;&emsp;1&emsp;&emsp;EXACT&emsp;&emsp;18&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+1&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Propeptide&emsp;&emsp;Activation peptide&emsp;&emsp;[{'evidenceCode': 'ECO:0000269', 'source': 'PubMed', 'id': '2106878'}, {'evidenceCode': 'ECO:0000269', 'source': 'PubMed', 'id': '2500950'}]&emsp;&emsp;19&emsp;&emsp;EXACT&emsp;&emsp;134&emsp;&emsp;EXACT&emsp;&emsp;PRO_0000026408&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+2&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Chain&emsp;&emsp;Chymopapain&emsp;&emsp;&emsp;&emsp;135&emsp;&emsp;EXACT&emsp;&emsp;352&emsp;&emsp;EXACT&emsp;&emsp;PRO_0000026409&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+3&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Active site&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10088'}]&emsp;&emsp;159&emsp;&emsp;EXACT&emsp;&emsp;159&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+4&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Active site&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10089'}]&emsp;&emsp;293&emsp;&emsp;EXACT&emsp;&emsp;293&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+5&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Active site&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10090'}]&emsp;&emsp;313&emsp;&emsp;EXACT&emsp;&emsp;313&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+6&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Glycosylation&emsp;&emsp;N-linked (GlcNAc...) asparagine&emsp;&emsp;[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU00498'}]&emsp;&emsp;86&emsp;&emsp;EXACT&emsp;&emsp;86&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
