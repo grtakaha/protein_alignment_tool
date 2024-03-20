@@ -8,23 +8,22 @@ Takes one or more protein sequences (FASTA format) as input and BLASTs them agai
 
 NOTE: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
 
-**INPUT:** FASTA-formatted file with at least one sequence
+INPUT: FASTA-formatted file with at least one sequence
 
-**OUTPUT:** a set of directories - one for each sequence in the original input file - that contain the following:\
+OUTPUT: A set of directories - one for each sequence in the original input file - that contain the following:\
 	&emsp;&emsp;the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)\
 	&emsp;&emsp;individual FASTA files with UniProt sequences for each BLAST hit\
 	&emsp;&emsp;one FASTA file containing all protein sequences, including the query sequence (all.fasta)
 
 If used in a "multi" run, downstream commands will be run on each resulting collection of outputs.
 
-For example: blast.py will yield multiple all.fasta (one for each query), which can be sent to both retrieve_annotations.py and alignment.py\
-	&emsp;&emsp;This is why "blast annotate align" is a valid input for the --order optional argument.
+For example: blast.py will yield multiple all.fasta (one for each query), which can be sent to both retrieve_annotations.py and alignment.py. This is why "blast annotate align" is a valid input for the --order optional argument.
 
 Example usage:\
-	&emsp;&emsp;python blast.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
+  &ensp;python blast.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
 
 Example usage from main_tool.py:\
-	&emsp;&emsp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] blast [-h] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
+  &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] blast [-h] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
 
 optional arguments:\
   &ensp;-h, --help            &emsp;&emsp;&emsp;show this help message and exit\
@@ -42,80 +41,90 @@ optional arguments:\
 
 # retrieve_annotations.py
 
-retrieve_annotations.py - Tool that takes one or more UniProt protein sequences (FASTA format) as input - UniProt is important; have not added support for non-UniProt inputs; may run infinitely if it cannot find an entry - and retrieves annotations for those sequences. Please only use UniProt sequences here until this feature is updated.
-Infile must be a FASTA-formatted, CLUSTAL_NUM-formatted, or CLUSTAL-formatted file with at least one protein sequence. ALL protein sequences must be from UniProt (specifically, they must have a UniProt accession at the beginning of their names). At least three sequences are necessary if used in a multi run that includes alignment.py (align).
-Outputs include:
-	a collection of individual annotation files (.ann), one for each sequence in the input FASTA file
-	one combined annotation file that includes all annotations for this collection of sequences (all.ann)
-all.ann can be used as input for clustal_to_svg.py. See ***** ANNOTATION FORMAT ***** for help on formatting annotations by hand.
+Takes one or more UniProt protein sequences (FASTA format) as input and retrieves annotations for those sequences. 
 
-Example usage: 
-python retrieve_annotations.py [-h] [-i INFILE] [-o OUT_DIRECTORY]
+NOTE: Please only use UniProt sequences here until this feature is updated. May run infinitely if it cannot find a given entry.
 
-Example usage from main_tool.py: 
-python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] annotate [-h]
+INPUT: A FASTA-formatted, CLUSTAL_NUM-formatted, or CLUSTAL-formatted file with at least one protein sequence. ALL protein sequences must be from UniProt (specifically, they must have a UniProt accession at the beginning of their names). At least three sequences are necessary if used in a multi run that includes alignment.py (align).
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INFILE, --infile INFILE
-                        Full path of input file.
-  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
-                        Full path of output directory. Must end with "/".
-***** END OF RETRIEVE_ANNOTATIONS.PY INSTRUCTIONS *****
+OUTPUT: A collection of files that includes the following:\
+	&emsp;&emsp;individual annotation files (.ann), one for each unique sequence in the input file\
+	&emsp;&emsp;one combined annotation file that includes all annotations for this collection of sequences (all.ann)
 
-***** ALIGNMENT.PY INSTRUCTIONS *****
-alignment.py - Tool that takes at least three protein sequences as input and aligns them using Clustal Omega.
-Infile must be a FASTA-formatted file with at least three sequences.
-Outputs include:
-	an alignment (.clustal_num) and associated percent identity matrix (.pim) of the given FASTA file
+NOTE: all.ann can be used as input for clustal_to_svg.py. See **ANNOTATION FORMAT** for help formatting annotations by hand.
+
+Example usage:\
+  &ensp;python retrieve_annotations.py [-h] [-i INFILE] [-o OUT_DIRECTORY]
+
+Example usage from main_tool.py:\
+  &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] annotate [-h]
+
+optional arguments:\
+  &ensp;-h, --help            &emsp;&emsp;&emsp;show this help message and exit\
+  &ensp;-i INFILE, --infile INFILE\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+  &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".
+
+
+# alignment.py
+
+Takes at least three protein sequences as input and aligns them using Clustal Omega.
+
+INPUT: A FASTA-formatted file with at least three sequences
+
+OUTPUT: An alignment (.clustal_num) and associated percent identity matrix (.pim) of the given FASTA file
 	
-Example usage: 
-python alignment.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-e EMAIL] [-t TITLE]
+Example usage:\
+  &ensp;python alignment.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-e EMAIL] [-t TITLE]
 
-Example usage from main_tool.py: 
-python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] align [-h] [-s STYPE] [-e EMAIL] [-t TITLE]
+Example usage from main_tool.py:\
+  &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] align [-h] [-s STYPE] [-e EMAIL] [-t TITLE]
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INFILE, --infile INFILE
-                        Full path of input file.
-  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
-                        Full path of output directory. Must end with "/".
-  -s STYPE, --stype STYPE
-                        Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.
-  -e EMAIL, --email EMAIL
-                        Personal email. Used to submit BLAST and Clustal Omega jobs.
-  -t TITLE, --title TITLE
-                        Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim
-***** END OF ALIGNMENT.PY INSTRUCTIONS *****
+optional arguments:\
+  &ensp;-h, --help            &emsp;&emsp;&emsp;show this help message and exit\
+  &ensp;-i INFILE, --infile INFILE\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+  &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
+  &ensp;-s STYPE, --stype STYPE\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
+  &ensp;-e EMAIL, --email EMAIL\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
+  &ensp;-t TITLE, --title TITLE\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim
 
-***** CLUSTAL_TO_SVG.PY INSTRUCTIONS *****
-clustal_to_svg.py - Tool that reformats a .clustal_num or .clustal alignment into an editable Inkscape SVG. Currently annotates conserved residues (automatic, not optional) and active site residues (requires an input annotation file, optional).
-Infile must be a CLUSTAL or CLUSTAL_NUM file.
-Output is a sequential set of SVGs (.svg), numbered 0, 1, 2, etc., with formatted alignments and associted conserved residues and/or annotations.
 
-Example usage from main_tool.py: 
-python clustal_to_svg.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
-                                                   [-a ANNOTATIONS]
-Example usage from main_tool.py: 
-python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] svg [-h] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
-                                                       [-a ANNOTATIONS]
+# clustal_to_svg.py
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INFILE, --infile INFILE
-                        Full path of input file.
-  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
-                        Full path of output directory. Must end with "/".
-  -c CODES, --codes CODES
-                        Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.
-  -n NUMS, --nums NUMS
-                        Default FALSE. If TRUE, will add total residue numbers to the right side of every line.
-  -u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT
-                        Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA
-  -a ANNOTATIONS, --annotations ANNOTATIONS
-                        Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
-***** END OF CLUSTAL_TO_SVG.PY INSTRUCTIONS *****
+Reformats a .clustal_num or .clustal alignment into an editable Inkscape SVG. Currently annotates conserved residues (automatic, not optional) and active site residues (requires an input annotation file, optional).
+
+INPUT: A CLUSTAL or CLUSTAL_NUM file
+
+OUTPUT: A sequential set of SVGs (.svg), numbered 0, 1, 2, etc., with formatted alignments and associated conserved residues and/or annotations.
+
+Example usage:\
+  &ensp;python clustal_to_svg.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
+                           &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;[-a ANNOTATIONS]
+Example usage from main_tool.py:\
+  &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] svg [-h] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
+                                                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;[-a ANNOTATIONS]
+
+optional arguments:\
+  &ensp;-h, --help            &emsp;&emsp;&emsp;show this help message and exit\
+  &ensp;-i INFILE, --infile INFILE\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+  &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
+  &ensp;-c CODES, --codes CODES\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.\
+  &ensp;-n NUMS, --nums NUMS\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add total residue numbers to the right side of every line.\
+  &ensp;-u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA\
+  &ensp;-a ANNOTATIONS, --annotations ANNOTATIONS\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
+
 
 ***** MAIN_TOOL.PY INSTRUCTIONS *****
 main_tool.py - Runs one, two, or all of the above in the order given
