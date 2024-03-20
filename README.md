@@ -11,33 +11,33 @@ NOTE: --stype dna is currently not supported in any form. May enter an infinite 
 Infile must be a FASTA-formatted file with at least one sequence.
 
 Output is a set of directories - one for each sequence in the original input file - that contain the following:\
-	&emsp;the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)\
-	&emsp;individual FASTA files with UniProt sequences for each BLAST hit\
-	&emsp;one FASTA file containing all protein sequences, including the query sequence (all.fasta)
+	&emsp;&emsp;the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)\
+	&emsp;&emsp;individual FASTA files with UniProt sequences for each BLAST hit\
+	&emsp;&emsp;one FASTA file containing all protein sequences, including the query sequence (all.fasta)
 
 If used in a "multi" run, downstream commands will be run on each resulting collection of outputs.
 
 For example: blast.py will yield multiple all.fasta (one for each query), which can be sent to both retrieve_annotations.py and alignment.py\
-	&emsp;This is why "blast annotate align" is a valid input for the --order optional argument.
+	&emsp;&emsp;This is why "blast annotate align" is a valid input for the --order optional argument.
 
 Example usage:\
-	&emsp;python blast.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
+	&emsp;&emsp;python blast.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
 
 Example usage from main_tool.py:\
-	&emsp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] blast [-h] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
+	&emsp;&emsp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] blast [-h] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
 
 optional arguments:\
-  &ensp;-h, --help            show this help message and exit\
+  &ensp;-h, --help            &emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        Full path of output directory. Must end with "/".\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
   &ensp;-s STYPE, --stype STYPE\
-                        Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
   &ensp;-e EMAIL, --email EMAIL\
-                        Personal email. Used to submit BLAST and Clustal Omega jobs.\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
   &ensp;-nr NUM_RES, --num_res NUM_RES\
-                        Number of results.
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.
 
 ***** END OF BLAST.PY INSTRUCTIONS *****
 
