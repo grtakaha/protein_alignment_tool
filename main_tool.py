@@ -76,30 +76,32 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Centralized Tool Manager')
     # I don't completely understand, but -i and -o must come before tool_name
     # -i ./infile.fasta -o ./out_dir annotate
+    
     parser.add_argument("-i", "--infile", type=str, help="Full path of input file")
     parser.add_argument("-o", "--out_directory", type=str, help="Full path of output directory")
 
-    subparsers = parser.add_subparsers(dest='tool_name', help='Tool to execute') # must be the first argument (positional)
+    subparsers = parser.add_subparsers(dest='tool_name', help='Tool to execute') # must be after -i and -o (positional)
     
     # each tool should have its own argument parsing
+    ##### CONSIDER REMOBING EMAIL REQUIREMENT ##### DOES SETTING A PLACEHOLDER WORK?
+    blast = subparsers.add_parser("blast")
+    blast.add_argument("-s", "--stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
+    blast.add_argument("-e", "--email", default="") # see if this will run without an email
+    blast.add_argument("-nr", "--num_res", default="10")
+    
     annotation = subparsers.add_parser("annotate") # instead of having combination calls...consider having an argument that asks if other actions should be performed
     # only uses default -i and -o arguments for retrieve_annotations
     
-    blast = subparsers.add_parser("blast")
-    blast.add_argument("-s", "--stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
-    blast.add_argument("-e", "--email")
-    blast.add_argument("-nr", "--num_res", default="10")
-    
     alignment = subparsers.add_parser("align")
     alignment.add_argument("-s", "--stype", default="protein")
-    alignment.add_argument("-e", "--email")
+    alignment.add_argument("-e", "--email", default="")
     alignment.add_argument("-t", "--title", default="alignment")
     
     clust_to_svg = subparsers.add_parser("svg")
-    clust_to_svg.add_argument("-c", "--codes", nargs="?", default="FALSE")
-    clust_to_svg.add_argument("-n", "--nums", nargs="?", default="FALSE")
-    clust_to_svg.add_argument("-u", "--uniprot_format", nargs="?", default="FALSE")
-    clust_to_svg.add_argument("-a", "--annotations", nargs="?", default="") # will annotate if this is provided at all
+    clust_to_svg.add_argument("-c", "--codes", default="FALSE")
+    clust_to_svg.add_argument("-n", "--nums", default="FALSE")
+    clust_to_svg.add_argument("-u", "--uniprot_format", default="FALSE")
+    clust_to_svg.add_argument("-a", "--annotations", default="") # will annotate if this is provided at all
     
     
     # if multitool is set, then it should have all tools from start to finish, with arguments for each tool listed in the form:
@@ -117,46 +119,40 @@ def parse_args():
     #multi.add_argument("-cts", "--clust_to_svg", nargs="?")
     multi.add_argument("-ord", "--order", nargs="+") # will return a list of 1 or more tools to use with these arguments
     multi.add_argument("-s", "--stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
-    multi.add_argument("-e", "--email")
+    multi.add_argument("-e", "--email", default="")
     multi.add_argument("-nr", "--num_res", default="10")
     multi.add_argument("-t", "--title", default="alignment")
-    multi.add_argument("-c", "--codes", nargs="?", default="FALSE")
-    multi.add_argument("-n", "--nums", nargs="?", default="FALSE")
-    multi.add_argument("-u", "--uniprot_format", nargs="?", default="FALSE")
-    multi.add_argument("-a", "--annotations", nargs="?", default="") # will annotate if this is provided at all #### cannot be nonetype
+    multi.add_argument("-c", "--codes", default="FALSE")
+    multi.add_argument("-n", "--nums", default="FALSE")
+    multi.add_argument("-u", "--uniprot_format", default="FALSE")
+    multi.add_argument("-a", "--annotations", default="") # will annotate if this is provided at all #### cannot be nonetype
  
-    # Add sub-command parsers for each tool
-    # Example: tool1, tool2, tool3, tool4
-    # ...
-
     #print(parser.parse_args(["annotate", "-i", "test", "-o", "test2"]))
     return parser.parse_args()
 
 ##### TODO: MAKE IT SO THAT FILES CAN BE FOUND ANYWHERE #####
 ##### TODO: MAKE SURE NON-UNIPROT QUERIES DON'T BREAK ANNOTATION #####
-##### TODO: MAKE IT SO THAT ANNOTATIONS AREN'T REQUIRED #####
+##### TODO: MAKE IT SO THAT ANNOTATIONS AREN'T REQUIRED ##### DONE
 def execute_tool(args):
     # return output files? or have a separate function to return output files for a particular tool
     # Execute the selected tool
     if args.tool_name == "annotate": # annotation command main_tool.py ann ...
-        subprocess.run(["python", "retrieve_annotations.py",
+        subprocess.run(["python", f"{os.path.abspath(os.path.dirname(__file__))}/retrieve_annotations.py",
                         "--infile", args.infile,
                         "--out_directory", args.out_directory])
         ##### SOMETHING WRONG HERE #####
         args.annotations = find_outputs(args)[0] # will change args
 
     elif args.tool_name == "blast": # replace with split uniprot_fastas into blast and split blast...
-        subprocess.run(["python", "blast.py", 
+        subprocess.run(["python", f"{os.path.abspath(os.path.dirname(__file__))}/blast.py", 
                         "--infile", args.infile, 
                         "--out_directory", args.out_directory,
                         "--stype", args.stype,
                         "--email", args.email,
                         "--num_res", args.num_res])      
-        # Call tool2.py with relevant arguments
-        # ...
-    
+
     elif args.tool_name == "align":
-        subprocess.run(["python", "alignment.py", 
+        subprocess.run(["python", f"{os.path.abspath(os.path.dirname(__file__))}/alignment.py", 
                         "--infile", args.infile, 
                         "--out_directory", args.out_directory,
                         "--stype", args.stype,
@@ -167,7 +163,7 @@ def execute_tool(args):
     elif args.tool_name == "svg":
         #print(args)
         #print(args.annotations)
-        subprocess.run(["python", "clustal_to_svg.py", 
+        subprocess.run(["python", f"{os.path.abspath(os.path.dirname(__file__))}/clustal_to_svg.py", 
                         "--infile", args.infile, 
                         "--out_directory", args.out_directory,
                         "--codes", args.codes,

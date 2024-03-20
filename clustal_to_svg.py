@@ -89,9 +89,11 @@ def get_conserved_coords(alignment, lines_per_svg=72, nums="FALSE"):
 
 def get_feature_coords(alignment, lines_per_svg=72, nums="FALSE"):
     ##### return list of tuples with x and y coordinates for each svg (given the max number of lines)
+    # COME BACK TO THIS LATER MAYBE? RECTANGLES ARE STILL NOT EXACTLY ALIGNED WITH CHARS IN X-COORD...BUT NOT URGENT OR NOTICEABLE
     x, y = 9.11, 20.274 # in px
-    char_width, line_height = 5.5, 11
+    char_width, line_height = 5.280, 11
     width_gap = (701.576 - 127*char_width) / (125 + 2) # in px
+    #width_gap = (700.866 - 127*char_width) / (127-1) # in px
     height_gap = (827.5 - 72*line_height) / (72-1) # in px 
       
     lines_per_block = len(alignment.proteins) + 2
@@ -113,27 +115,28 @@ def get_feature_coords(alignment, lines_per_svg=72, nums="FALSE"):
     
             svg_num = int(tot_block_num / max_blocks - 1 + min(1, tot_block_num % max_blocks)) # necessary for svg #
     
-            block_num = int(tot_block_num % max_blocks)
-            if block_num == 0:
-                block_num = max_blocks
+            ##### THIS DOES NOT WORK #####
+            #block_num = int(tot_block_num % max_blocks)
+            #if block_num == 0:
+                #block_num = max_blocks
             
-            char_num = int(i % 100) # necessary for x
-            if char_num == 0:
-                char_num = 100 
-            char_num += int(char_num / 10) - 1 + min(1, char_num % 10) + 2 + get_max_header(alignment, nums=nums) # necessary for x; remove one character, then add it back if this is char_num % 10 is not 0
-                        
-            
-            
-            #tot_block_num = int(feature.clust_start / 100) + 1 # 1-indexed
-
-            #svg_num = int(tot_block_num / max_blocks - 1 + min(1, tot_block_num % max_blocks)) # necessary for svg #
-            #block_num = int(tot_block_num / (svg_num + 1))
-            #char_num = int(feature.clust_start % 100) # necessary for x
+            #char_num = int(i % 100) # necessary for x
+            #if char_num == 0:
+                #char_num = 100 
             #char_num += int(char_num / 10) - 1 + min(1, char_num % 10) + 2 + get_max_header(alignment, nums=nums) # necessary for x; remove one character, then add it back if this is char_num % 10 is not 0
+            ##### THIS DOES NOT WORK #####
+            
+            tot_block_num = int(feature.clust_start / 100) + 1 # 1-indexed
+
+            svg_num = int(tot_block_num / max_blocks - 1 + min(1, tot_block_num % max_blocks)) # necessary for svg #
+            block_num = int(tot_block_num / (svg_num + 1))
+            char_num = int(feature.clust_start % 100) # necessary for x
+            char_num += int(char_num / 10) - 1 + min(1, char_num % 10) + 2 + get_max_header(alignment, nums=nums) # necessary for x; remove one character, then add it back if this is char_num % 10 is not 0
            
             line_num = lines_per_block * (block_num - 1) + (i+1) # necessary for y
             
             x_coord = x + width_gap + (char_num - 1)*(char_width + width_gap) # fix later; this doesn't totally align; do it like height instead
+            #x_coord = x + (char_num - 1)*(char_width + width_gap)
             y_coord = y + (line_num - 1)*(line_height + height_gap)
             
             if not feature_dict.get(svg_num):
@@ -342,39 +345,16 @@ def find_path(path, action):
             os.makedirs(parents)
     return abspath
 
-#def arguments():
-    ## add descriptions to arguments later
-    #parser = argparse.ArgumentParser()
-    ## change clust_path arguments later
-    #parser.add_argument("-infile")    
-    #parser.add_argument("-out_directory", nargs="?", default="./") # consider changing to out_directory
-    #parser.add_argument("-codes", nargs="?", default="FALSE")
-    #parser.add_argument("-nums", nargs="?", default="FALSE")
-    #parser.add_argument("-uniprot_format", nargs="?", default="FALSE")
-    #parser.add_argument("-annotations", nargs="?", default=None)
-    
-    #args = parser.parse_args()
-    
-    #options = {}
-    #options["infile"] = args.infile
-    #options["out_directory"] = args.out_directory   
-    #options["codes"] = args.codes
-    #options["nums"] = args.nums
-    #options["uniprot_format"] = args.uniprot_format
-    #options["annotations"] = args.annotations
-    
-    #return options
-
 def parse_args():
     # add descriptions to arguments later
     parser = argparse.ArgumentParser()
     # change clust_path arguments later
     parser.add_argument("-i", "--infile")    
-    parser.add_argument("-o", "--out_directory", nargs="?", default="./") # consider changing to out_directory
-    parser.add_argument("-c", "--codes", nargs="?", default="FALSE")
-    parser.add_argument("-n", "--nums", nargs="?", default="FALSE")
-    parser.add_argument("-u", "--uniprot_format", nargs="?", default="FALSE")
-    parser.add_argument("-a", "--annotations", nargs="?", default="") # will annotate if this is provided at all
+    parser.add_argument("-o", "--out_directory", default="./") # consider changing to out_directory
+    parser.add_argument("-c", "--codes", default="FALSE")
+    parser.add_argument("-n", "--nums", default="FALSE")
+    parser.add_argument("-u", "--uniprot_format", default="FALSE")
+    parser.add_argument("-a", "--annotations", default="") # will annotate if this is provided at all
     # consider making features separate
     
     return parser.parse_args()

@@ -99,32 +99,13 @@ def find_path(path, action):
             os.makedirs(parents)
     return abspath
 
-#def arguments():
-    #parser = argparse.ArgumentParser()
-    
-    #parser.add_argument("-infile")
-    #parser.add_argument("-out_directory", default="./test_runs/test/")
-    #parser.add_argument("-stype", default="protein")
-    #parser.add_argument("-email")
-    #parser.add_argument("-title", default="alignment")
-    
-    #args = parser.parse_args()
-    
-    #options = {}
-    #options["infile"] = args.infile
-    #options["out_directory"] = args.out_directory
-    #options["stype"] = args.stype
-    #options["title"] = args.title
-    #options["email"] = args.email
-    
-    #return options
 def parse_args():
     parser = argparse.ArgumentParser()
     
     parser.add_argument("-i", "--infile")
     parser.add_argument("-o", "--out_directory", default="./test_runs/test/")
     parser.add_argument("-s", "--stype", default="protein")
-    parser.add_argument("-e", "--email")
+    parser.add_argument("-e", "--email", default="")
     parser.add_argument("-t", "--title", default="alignment")
 
     return parser.parse_args()
@@ -132,8 +113,6 @@ def parse_args():
 def main():
     
     args = parse_args()
-    # if running on its own, will use command-line arguments; otherwise, pass arguments for this function
-    # options must be a dictionary of valid options for this module
     
     infile = find_path(args.infile, action="r")
     print(f"Processing sequences from {infile} \n", flush=True)

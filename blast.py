@@ -100,6 +100,7 @@ class api_tools():
         
         return response.text
     
+    # unused?
     def get_metadata(ID):
         # for now, just returns entire json...consider extracting annotations only
         url_metadata = f"https://rest.uniprot.org/uniprotkb/{ID}"
@@ -156,28 +157,6 @@ def fasta_to_df(file):
             else:
                 seqs[-1] += line.strip()
     return pd.DataFrame({"Accession": accessions, "IDs": ids, "Sequence": seqs}).set_index("IDs")
-
-#def arguments():
-    #parser = argparse.ArgumentParser()
-    
-    #parser.add_argument("-infile")
-    #parser.add_argument("-out_directory", default="./test_runs/test/")
-    #parser.add_argument("-stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
-    #parser.add_argument("-email")
-    #parser.add_argument("-num_res", default="10")
-    ##parser.add_arugmnet("-blast", default="TRUE") # fix later; add another tool; retrieve_annotations.py so that these are not tied
-    
-    #args = parser.parse_args()
-    
-    #options = {}
-    #options["infile"] = args.infile
-    #options["out_directory"] = args.out_directory
-    #options["stype"] = args.stype
-    #options["email"] = args.email
-    #options["num_res"] = args.num_res
-    
-    #return options   
-    
     
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -185,8 +164,8 @@ def parse_args():
     parser.add_argument("-i", "--infile")
     parser.add_argument("-o", "--out_directory", default="./")
     parser.add_argument("-s", "--stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
-    parser.add_argument("-e", "--email")
-    parser.add_argument("-n", "--num_res", default="10")
+    parser.add_argument("-e", "--email", default="")
+    parser.add_argument("-nr", "--num_res", default="10")
     #parser.add_arugmnet("-blast", default="TRUE") # fix later; add another tool; retrieve_annotations.py so that these are not tied
     
     return parser.parse_args()
@@ -238,7 +217,7 @@ def main():
         with open(f"{prot_directory}/{protein}.tsv", "w") as tsv:
             tsv.write(blast_results[1])         
         
-        features_df_list = []
+        features_df_list = [] # unused?
         # parse blast_results[1] (tsv form)
         for line in blast_results[1].split("\n")[1:-1]: # skip first line (headers) and last line (empty); don't bother reading into a dataframe
             hit = line.split("\t")[2]
