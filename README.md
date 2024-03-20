@@ -213,4 +213,4 @@ A real example might look like:
 		prot	whole_prot	type	location.start.value	location.end.value
 	0	PAPA1_CARPA	sp|P00784|PAPA1_CARPA	Active site	158	158
 
-An example of a valid annotation file can be found in annotation_example.ann
+A truncated, but real example of a valid annotation file can be found in annotation_example.ann.
