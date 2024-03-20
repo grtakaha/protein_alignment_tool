@@ -8,7 +8,7 @@ General:\
 	&emsp;&emsp;Python 3.7+
 
 Python Libraries:\
-	&emsp;&emsp;pandas
+	&emsp;&emsp;pandas\
 	&emsp;&emsp;requests
 
 # blast.py
@@ -205,21 +205,12 @@ As of 2024.03.19, only annotations of type "Active site" will be used. This will
 
 Annotation files that include the following columns and VALUES (tab-delimited) can be used as inputs for clustal_to_svg.py:
 
-&emsp;&emsp;prot&emsp;&emsp;whole_prot&emsp;&emsp;type&emsp;&emsp;location.start.value&emsp;&emsp;location.end.value
-ARBITRARY_INDEX&emsp;&emsp;UNIPROT_FORMAT_ACC&emsp;&emsp;FULL_ACCESSION	ANNOTATION_TYPE&emsp;&emsp;START&emsp;&emsp;END
+	prot	whole_prot	type	location.start.value	location.end.value\
+ARBITRARY_INDEX	UNIPROT_FORMAT_ACC	FULL_ACCESSION	ANNOTATION_TYPE	START	END
 
-Example of a valid annotation file:
+A real example might look like:
 
-&emsp;&emsp;prot&emsp;&emsp;whole_prot&emsp;&emsp;type&emsp;&emsp;description&emsp;&emsp;evidences&emsp;&emsp;location.start.value&emsp;&emsp;location.start.modifier&emsp;&emsp;location.end.value&emsp;&emsp;location.end.modifier&emsp;&emsp;featureId&emsp;&emsp;featureCrossReferences&emsp;&emsp;ligand.name&emsp;&emsp;ligand.id&emsp;&emsp;ligand.note&emsp;&emsp;alternativeSequence.originalSequence&emsp;&emsp;alternativeSequence.alternativeSequences
-0&emsp;&emsp;A0A164XSU3_DAUCS&emsp;&emsp;tr|A0A164XSU3|A0A164XSU3_DAUCS&emsp;&emsp;Signal&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000256', 'source': 'SAM', 'id': 'SignalP'}]&emsp;&emsp;1&emsp;&emsp;EXACT&emsp;&emsp;27&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-1&emsp;&emsp;A0A164XSU3_DAUCS&emsp;&emsp;tr|A0A164XSU3|A0A164XSU3_DAUCS&emsp;&emsp;Chain&emsp;&emsp;Cysteine protease&emsp;&emsp;[{'evidenceCode': 'ECO:0000256', 'source': 'SAM', 'id': 'SignalP'}]&emsp;&emsp;28&emsp;&emsp;EXACT&emsp;&emsp;354&emsp;&emsp;EXACT&emsp;&emsp;PRO_5018759784&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-2&emsp;&emsp;A0A164XSU3_DAUCS&emsp;&emsp;tr|A0A164XSU3|A0A164XSU3_DAUCS&emsp;&emsp;Domain&emsp;&emsp;Cathepsin propeptide inhibitor&emsp;&emsp;[{'evidenceCode': 'ECO:0000259', 'source': 'SMART', 'id': 'SM00848'}]&emsp;&emsp;50&emsp;&emsp;EXACT&emsp;&emsp;106&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-3&emsp;&emsp;A0A164XSU3_DAUCS&emsp;&emsp;tr|A0A164XSU3|A0A164XSU3_DAUCS&emsp;&emsp;Domain&emsp;&emsp;Peptidase C1A papain C-terminal&emsp;&emsp;[{'evidenceCode': 'ECO:0000259', 'source': 'SMART', 'id': 'SM00645'}]&emsp;&emsp;136&emsp;&emsp;EXACT&emsp;&emsp;351&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-0&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Signal&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000255'}]&emsp;&emsp;1&emsp;&emsp;EXACT&emsp;&emsp;18&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-1&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Propeptide&emsp;&emsp;Activation peptide&emsp;&emsp;[{'evidenceCode': 'ECO:0000269', 'source': 'PubMed', 'id': '2106878'}, {'evidenceCode': 'ECO:0000269', 'source': 'PubMed', 'id': '2500950'}]&emsp;&emsp;19&emsp;&emsp;EXACT&emsp;&emsp;134&emsp;&emsp;EXACT&emsp;&emsp;PRO_0000026408&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-2&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Chain&emsp;&emsp;Chymopapain&emsp;&emsp;&emsp;&emsp;135&emsp;&emsp;EXACT&emsp;&emsp;352&emsp;&emsp;EXACT&emsp;&emsp;PRO_0000026409&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-3&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Active site&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10088'}]&emsp;&emsp;159&emsp;&emsp;EXACT&emsp;&emsp;159&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-4&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Active site&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10089'}]&emsp;&emsp;293&emsp;&emsp;EXACT&emsp;&emsp;293&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-5&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Active site&emsp;&emsp;&emsp;&emsp;[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU10090'}]&emsp;&emsp;313&emsp;&emsp;EXACT&emsp;&emsp;313&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-6&emsp;&emsp;PAPA2_CARPA&emsp;&emsp;sp|P14080|PAPA2_CARPA&emsp;&emsp;Glycosylation&emsp;&emsp;N-linked (GlcNAc...) asparagine&emsp;&emsp;[{'evidenceCode': 'ECO:0000255', 'source': 'PROSITE-ProRule', 'id': 'PRU00498'}]&emsp;&emsp;86&emsp;&emsp;EXACT&emsp;&emsp;86&emsp;&emsp;EXACT&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
-&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+	prot	whole_prot	type	location.start.value	location.end.value\
+0	PAPA1_CARPA	sp|P00784|PAPA1_CARPA	Active site	158	158
+
+An example of a valid annotation file can be found in annotation_example.ann
