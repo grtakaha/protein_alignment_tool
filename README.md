@@ -3,35 +3,42 @@ Collection of scripts used to visualize (mostly) protein sequences.
 NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are currently set with (presumably) default parameters. Settings can be found within the scripts for those who are curious.
 
 ***** BLAST.PY INSTRUCTIONS *****
+
 blast.py - Tool that takes one or more protein sequences (FASTA format) as input and BLASTs them against UniProt databases (RefProt and SwissProt).
+
 NOTE: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
+
 Infile must be a FASTA-formatted file with at least one sequence.
-Output is a set of directories - one for each sequence in the original input file - that contain the following:
-	the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)
-	individual FASTA files with UniProt sequences for each BLAST hit
+
+Output is a set of directories - one for each sequence in the original input file - that contain the following:\
+	the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)\
+	individual FASTA files with UniProt sequences for each BLAST hit\
 	one FASTA file containing all protein sequences, including the query sequence (all.fasta)
+
 If used in a "multi" run, downstream commands will be run on each resulting collection of outputs.
-For example: blast.py will yield multiple all.fasta (one for each query), which can be sent to both retrieve_annotations.py and alignment.py
+
+For example: blast.py will yield multiple all.fasta (one for each query), which can be sent to both retrieve_annotations.py and alignment.py\
 	This is why "blast annotate align" is a valid input for the --order optional argument.
 
-Example usage: 
+Example usage:\
 python blast.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
 
-Example usage from main_tool.py: 
+Example usage from main_tool.py:\
 python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] blast [-h] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INFILE, --infile INFILE
-                        Full path of input file.
-  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
-                        Full path of output directory. Must end with "/".
-  -s STYPE, --stype STYPE
-                        Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.
-  -e EMAIL, --email EMAIL
-                        Personal email. Used to submit BLAST and Clustal Omega jobs.
-  -nr NUM_RES, --num_res NUM_RES
+optional arguments:\
+  -h, --help            show this help message and exit\
+  -i INFILE, --infile INFILE\
+                        Full path of input file.\
+  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
+                        Full path of output directory. Must end with "/".\
+  -s STYPE, --stype STYPE\
+                        Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
+  -e EMAIL, --email EMAIL\
+                        Personal email. Used to submit BLAST and Clustal Omega jobs.\
+  -nr NUM_RES, --num_res NUM_RES\
                         Number of results.
+
 ***** END OF BLAST.PY INSTRUCTIONS *****
 
 ***** RETRIEVE_ANNOTATIONS.PY INSTRUCTIONS *****
