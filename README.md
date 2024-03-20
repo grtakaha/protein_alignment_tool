@@ -2,15 +2,15 @@ Collection of scripts used to visualize protein sequences.
  
 NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are currently set with (presumably) default parameters. Settings can be found within the scripts for those who are curious.
 
-***** BLAST.PY INSTRUCTIONS *****
+# blast.py
 
 blast.py - Tool that takes one or more protein sequences (FASTA format) as input and BLASTs them against UniProt databases (RefProt and SwissProt).
 
 NOTE: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
 
-Infile must be a FASTA-formatted file with at least one sequence.
+## INPUT: FASTA-formatted file with at least one sequence.
 
-Output is a set of directories - one for each sequence in the original input file - that contain the following:\
+## OUTPUT: a set of directories - one for each sequence in the original input file - that contain the following:\
 	&emsp;&emsp;the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)\
 	&emsp;&emsp;individual FASTA files with UniProt sequences for each BLAST hit\
 	&emsp;&emsp;one FASTA file containing all protein sequences, including the query sequence (all.fasta)
@@ -39,9 +39,9 @@ optional arguments:\
   &ensp;-nr NUM_RES, --num_res NUM_RES\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.
 
-***** END OF BLAST.PY INSTRUCTIONS *****
 
-***** RETRIEVE_ANNOTATIONS.PY INSTRUCTIONS *****
+# retrieve_annotations.py
+
 retrieve_annotations.py - Tool that takes one or more UniProt protein sequences (FASTA format) as input - UniProt is important; have not added support for non-UniProt inputs; may run infinitely if it cannot find an entry - and retrieves annotations for those sequences. Please only use UniProt sequences here until this feature is updated.
 Infile must be a FASTA-formatted, CLUSTAL_NUM-formatted, or CLUSTAL-formatted file with at least one protein sequence. ALL protein sequences must be from UniProt (specifically, they must have a UniProt accession at the beginning of their names). At least three sequences are necessary if used in a multi run that includes alignment.py (align).
 Outputs include:
