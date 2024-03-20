@@ -69,7 +69,7 @@ Example usage from main_tool.py:\
   &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] annotate [-h]
 
 optional arguments:\
-  &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
+  &ensp;-h, --help &emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
@@ -91,7 +91,7 @@ Example usage from main_tool.py:\
   &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] align [-h] [-s STYPE] [-e EMAIL] [-t TITLE]
 
 optional arguments:\
-  &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
+  &ensp;-h, --help &emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
@@ -121,7 +121,7 @@ Example usage from main_tool.py:\
                                                          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[-a ANNOTATIONS]
 
 optional arguments:\
-  &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
+  &ensp;-h, --help &emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
@@ -157,7 +157,7 @@ positional arguments:\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Tool to execute
 
 optional arguments:\
-  &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
+  &ensp;-h, --help &emsp;&emsp;&emsp;show this help message and exit\
   &ensp;-i INFILE, --infile INFILE\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
   &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
