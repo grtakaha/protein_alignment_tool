@@ -281,7 +281,7 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
         
         out = f"{out_directory}{i}.svg".replace("\\", "/")
         with open(out, "w") as o:
-            print(f"Writing part {i} to {out}.", flush=True)
+            print(f"Writing part {i} to {out}.\n", flush=True)
             o.write(svg)
 
     ##### add active site annotation/other features

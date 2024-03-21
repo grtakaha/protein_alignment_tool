@@ -116,12 +116,13 @@ def execute_tool(args):
             if tool == "blast" and i+1 < len(args.order): # will only continue if there is something after blast
                 # run everything from here on out using multi and different inputs
                 infiles = find_outputs(args)
-                print(f"INFILE LIST: {infiles}")
+                print(f"blast tool executed in a multi run.")
+                print(f"Remaining calls ({args.oder}) will be executed on {infiles}.\n")
                 ##### MAY ERROR OUT BECAUSE +1 MIGHT NOT BE IN RANGE #####
                 args.order = args.order[i+1:] # start after blast call
                 for f in infiles:
-                    print(f"ORDER: {args.order}")
-                    print(f"INFILE: {f}")
+                    #print(f"ORDER: {args.order}")
+                    #print(f"INFILE: {f}")
                     args.tool_name = "multi"
                     args.infile = f
                     args.out_directory = "/".join(f.split("/")[:-1]) + "/"
@@ -133,13 +134,13 @@ def find_outputs(args):
     new_inputs = []
     if args.tool_name == "annotate":
         # it has another output for individual annotations
-        new_inputs.append(f"{args.out_directory}/all.ann") # tsv for annotations input later
+        new_inputs.append(f"{args.out_directory}/all.ann".replace("//", "/")) # tsv for annotations input later
     elif args.tool_name == "blast":
         proteins = fasta_to_df(find_path(args.infile, "r"))
         for p in proteins.index.values:
-            new_inputs.append(f"{args.out_directory}/{p}/all.fasta") # fastas of blast hits
+            new_inputs.append(f"{args.out_directory}/{p}/all.fasta".replace("//", "/")) # fastas of blast hits
     elif args.tool_name == "align":
-        new_inputs.append(f"{args.out_directory}/{args.title}.clustal_num")
+        new_inputs.append(f"{args.out_directory}/{args.title}.clustal_num".replace("//", "/"))
     elif args.tool_name == "svg":
         pass # not necessary to return anything because svg is the end of the line
     return new_inputs
