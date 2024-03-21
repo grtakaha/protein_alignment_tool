@@ -4,160 +4,9 @@ import os
 import time
 import pandas as pd
 import json
+import api_funcs as af
+from helpers import find_path, fasta_to_df
 
-class api_tools():
-    # acc and seq do no have newlines
-    def blast(email, program, stype, acc, seq, num_res="250"):
-        # for now, acc is "accession", no ">"
-        print(f"BLASTing {acc}...\n", flush=True)
-        # Define the data to be sent in the form
-        data = {
-            'email': email,
-            'program': program,
-            'matrix': 'BLOSUM62',
-            'alignments': num_res, # for now, make these the same
-            'scores': num_res,
-            'exp': '10',
-            'filter': 'F',
-            'gapalign': 'true',
-            'compstats': 'F',
-            'align': '0',
-            'stype': stype,
-            'sequence': f'>{acc}\n{seq}',
-            'database': 'uniprotkb_refprotswissprot'
-        }
-        
-        # Define the URL
-        url = "https://www.ebi.ac.uk/Tools/services/rest/ncbiblast/run"
-        
-        # rerun the request until it returns 200
-        # it's possible this becomes an endless loop...deal with that later
-        while True:
-            try:
-                response = requests.post(url, data=data)
-                if response.status_code != 200:
-                    print(f"BLAST query status code: {response.status_code}. Retrying...\n", flush=True)
-                else:
-                    print(f"{acc} successfully BLASTed.\n", flush=True)
-                    break
-            except Exception as e:
-                print(f"BLAST query caused exception: {e}. Retrying...\n", flush=True)
-            time.sleep(5) # wait 5 second in-between tries
-        
-        # Print the response
-        return response.text
-    
-    def get_blast_results(ID):
-        url_out = f"https://www.ebi.ac.uk/Tools/services/rest/ncbiblast/result/{ID}/out"
-        url_tsv = f"https://www.ebi.ac.uk/Tools/services/rest/ncbiblast/result/{ID}/tsv"
-        
-        # rerun the request until it returns 200
-        # it's possible this becomes an endless loop...deal with that later
-        while True:
-            try:
-                response_out = requests.get(url_out)
-                if response_out.status_code != 200:
-                    print(f"Default BLAST output status code: {response_out.status_code}. Retrying...\n", flush=True)
-                else:
-                    print(f"Default BLAST output found for {ID}.\n", flush=True)
-                    break
-            except Exception as e:
-                print(f"Default BLAST caused exception: {e}. Retrying...\n", flush=True)
-            time.sleep(5) # wait 5 seconds in-between tries
-           
-        # rerun the request until it returns 200
-        # it's possible this becomes an endless loop...deal with that later
-        while True:
-            try:
-                response_tsv = requests.get(url_tsv)
-                if response_tsv.status_code != 200:
-                    print(f"TSV BLAST output status code: {response_tsv.status_code}. Retrying...\n", flush=True)
-                else:
-                    print(f"TSV BLAST output found for {ID}.\n", flush=True)
-                    break
-            except Exception as e:
-                print(f"TSV BLAST caused exception: {e}. Retrying...\n", flush=True)
-            time.sleep(5) # wait 5 seconds in-between tries
-            
-        return (response_out.text, response_tsv.text) # tuple of strings
-    
-    def get_fasta(ID):
-        url_fasta = f"https://rest.uniprot.org/uniprotkb/{ID}.fasta"
-        
-        # rerun the request until it returns 200
-        # it's possible this becomes an endless loop...deal with that later
-        while True:
-            try:
-                response = requests.get(url_fasta)
-                if response.status_code != 200:
-                    print(f"FASTA status code: {response.status_code}. Retrying...\n", flush=True)
-                else:
-                    break
-            except Exception as e:
-                print(f"Exception occurred when trying to retrieve {ID} FASTA:\n{e}\nRetrying...\n", flush=True)
-            time.sleep(5) # wait 5 seconds in-between tries
-        print(f"FASTA found for {ID}.\n", flush=True)
-        
-        return response.text
-    
-    # unused?
-    def get_metadata(ID):
-        # for now, just returns entire json...consider extracting annotations only
-        url_metadata = f"https://rest.uniprot.org/uniprotkb/{ID}"
-        
-        # rerun the request until it returns 200
-        # it's possible this becomes an endless loop...deal with that later
-        # Set the headers to accept JSON
-        headers = {"Accept": "application/json"}      
-        while True:
-            try:
-                response_metadata = requests.get(url_metadata, headers)
-                if response_metadata.status_code != 200:
-                    print(f"Annotations status code: {response_metadata.status_code}. Retrying...\n", flush=True)
-                else:
-                    break
-            except Exception as e:
-                print(f"Exception occurred when trying to retrieve {ID} annotations:\n{e}\nRetrying...\n", flush=True)            
-            time.sleep(5) # wait 5 seconds in-between tries
-        print(f"Annotations retrieved for {ID}.\n", flush=True)
-        
-        return response_metadata.json()   
-    
-def find_path(path, action):
-    ''' Returns full path based on current working directory.
-    Current working directory is where this script was run, not where it was stored.
-    os.path.abspath() handles ".", "..", "../..", "./path", etc
-    '''
-    if path[-1] == "/":
-        abspath = os.path.abspath(path) + "/"
-    else:
-        abspath = os.path.abspath(path)
-
-    if action == "r":
-        if not os.path.isfile(abspath):
-            print(f"No file found at {abspath}. Exiting.\n", flush=True)
-            exit() # check if working
-    elif action == "w":
-        parents = "/".join(abspath.split("/")[:-1])
-        if not os.path.isdir(parents):
-            print(f"Output directory does not exist. Creating parent(s): {parents}\n", flush=True)
-            os.makedirs(parents)
-    return abspath
-
-def fasta_to_df(file):
-    with open(file, "r") as fasta:
-        accessions = []
-        ids = []
-        seqs = []
-        for line in fasta:
-            if line[0] == ">":
-                accessions.append(line.strip())
-                ids.append(line.strip().split(" ")[0][1:].split("|")[-1]) # get rid of ">" and remove "|" if they exist (for uniprot entries)
-                seqs.append("")
-            else:
-                seqs[-1] += line.strip()
-    return pd.DataFrame({"Accession": accessions, "IDs": ids, "Sequence": seqs}).set_index("IDs")
-    
 def parse_args():
     parser = argparse.ArgumentParser()
     
@@ -166,7 +15,6 @@ def parse_args():
     parser.add_argument("-s", "--stype", default="protein") # program is tied to stype (dna:blastx, rna:blastx, protein:blastp)
     parser.add_argument("-e", "--email", default="")
     parser.add_argument("-nr", "--num_res", default="10")
-    #parser.add_arugmnet("-blast", default="TRUE") # fix later; add another tool; retrieve_annotations.py so that these are not tied
     
     return parser.parse_args()
         
@@ -174,11 +22,11 @@ def main():
 
     args = parse_args()
 
-    infile = find_path(args.infile, action="r")    
+    infile = find_path(args.infile, action="r").replace("\\", "/")
     print(f"Processing sequences from {infile}\n", flush=True)
     infile_df = fasta_to_df(infile)
     
-    out_directory = find_path(args.out_directory, action="w")
+    out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
     print(f"Storing outputs in {out_directory}\n", flush=True)
     
     # add in translation feature later maybe...or just remove dna
@@ -198,7 +46,7 @@ def main():
         sequence = infile_df.loc[protein]["Sequence"]
         accession = infile_df.loc[protein]["Accession"] # includes ">"
         
-        blast_id = api_tools.blast(args.email, program, stype, protein, sequence, num_res=args.num_res)
+        blast_id = af.blast(args.email, program, stype, protein, sequence, num_res=args.num_res)
         blast_dict[protein] = blast_id
         
         prot_directory = find_path(f"{out_directory}/{protein}/", action="w")     
@@ -207,7 +55,7 @@ def main():
             
     for protein in blast_dict:
         # run blast_ids all at once and then retrieve all at once
-        blast_results = api_tools.get_blast_results(blast_dict[protein]) # consider retrieving ids all at once, then getting results one by one after running
+        blast_results = af.get_blast_results(blast_dict[protein]) # consider retrieving ids all at once, then getting results one by one after running
         
         # prot_directory should already be created; no find_path necessary
         prot_directory = f"{out_directory}/{protein}/"
@@ -222,7 +70,7 @@ def main():
         for line in blast_results[1].split("\n")[1:-1]: # skip first line (headers) and last line (empty); don't bother reading into a dataframe
             hit = line.split("\t")[2]
             print(f"Found BLAST hit: {hit}\n", flush=True)
-            hit_fasta = api_tools.get_fasta(hit)
+            hit_fasta = af.get_fasta(hit)
             hit_filename = hit_fasta.split("\n")[0].split(" ")[0].split("|")[-1]
             with open(f"{prot_directory}/{hit_filename}.fasta", "w") as fasta:
                 fasta.write(hit_fasta)

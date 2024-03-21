@@ -2,7 +2,7 @@ import protein_classes as pc
 import argparse
 import os
 import pandas as pd
-
+from helpers import find_path
 # this is the redesigned clustal_to_svg tool
 
 def get_max_header(alignment, nums="FALSE"):
@@ -53,10 +53,10 @@ def get_conserved_coords(alignment, lines_per_svg=72, nums="FALSE"):
     height_gap = (827.5 - 72*line_height) / (72-1) # in px
       
     lines_per_block = len(alignment.proteins) + 2
-    print(lines_per_block)
+    #print(lines_per_block)
     max_lines = int(lines_per_svg/lines_per_block) * lines_per_block # int rounds down, so this will be <= 72
     max_blocks = int(max_lines / lines_per_block)
-    print(max_blocks)
+    #print(max_blocks)
     
     conserved_dict = {} # {svg_num:[(f1, x, y), (f2, x, y), etc.], svg_num:[(f3, x, y), etc.], etc.}
     for c, i in alignment.conserved_res:
@@ -97,10 +97,10 @@ def get_feature_coords(alignment, lines_per_svg=72, nums="FALSE"):
     height_gap = (827.5 - 72*line_height) / (72-1) # in px 
       
     lines_per_block = len(alignment.proteins) + 2
-    print(lines_per_block)
+    #print(lines_per_block)
     max_lines = int(lines_per_svg/lines_per_block) * lines_per_block # int rounds down, so this will be <= 72
     max_blocks = int(max_lines / lines_per_block)
-    print(max_blocks)
+    #print(max_blocks)
     
     feature_dict = {} # {svg_num:[(f1, x, y), (f2, x, y), etc.], svg_num:[(f3, x, y), etc.], etc.}
     for i, name in enumerate(alignment.proteins): # is the number of this protein in an "ordered" dictionary
@@ -198,7 +198,7 @@ def split_lines(lines, lines_per_block, lines_per_svg=72):
     lines_per_block is # of proteins + 2
     '''
     max_lines = int(lines_per_svg/lines_per_block) * lines_per_block # int rounds down, so this will be <= 72
-    print(f"Max lines: {max_lines}.\n", flush=True)
+    #print(f"Max lines: {max_lines}.\n", flush=True)
     
     svg_list = [] #list of lines that go in each svg
     for i in range(0, len(lines), max_lines):
@@ -230,6 +230,7 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
     clust_num = 0 # 0-indexed because it is not counting just aa... it is counting positions in the alignment
     aa_list = ["R", "H", "K", "D", "E", "S", "T", "N", "Q", "C", "G", "P", "A", "V", "I", "L", "M", "F", "Y", "W"]
     #print(svgs)
+    
     for i, lines in enumerate(svgs):
 
         svg = f"<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n<svg baseProfile=\"full\" height=\"9in\" version=\"1.1\" width=\"7.5in\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" xmlns:ev=\"http://www.w3.org/2001/xml-events\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"><defs />"
@@ -266,8 +267,8 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
             for f in feature_coords[i]:
                 feature = f[0]
                 if feature.feature_type in relevant_features:
-                    print(f"{feature.feature_type} found at {f[3]}, residue {feature.start}, {feature.clust_start}. Adding to {i}.svg.", flush=True)
-                    print(f"{f[1]}, {f[2]}\n", flush=True)
+                    print(f"{feature.feature_type} found for {f[3]}, residue {feature.start}, alignment position {feature.clust_start}. Adding to {i}.svg.", flush=True)
+                    #print(f"{f[1]}, {f[2]}\n", flush=True)
                     svg += create_feature(f[0], f[1], f[2]) # feature, x, y
                     
         # not saving svgs to 0...
@@ -324,27 +325,6 @@ def read_alignment(infile, max_header=16):
     alignment.set_conserved_res() # set conserved residues for the completed alignment
     return alignment
 
-def find_path(path, action):
-    ''' Returns full path based on current working directory.
-    Current working directory is where this script was run, not where it was stored.
-    os.path.abspath() handles ".", "..", "../..", "./path", etc
-    '''
-    if path[-1] == "/":
-        abspath = os.path.abspath(path) + "/"
-    else:
-        abspath = os.path.abspath(path)
-
-    if action == "r":
-        if not os.path.isfile(abspath):
-            print(f"No file found at {abspath}. Exiting.\n", flush=True)
-            exit() # check if working
-    elif action == "w":
-        parents = "/".join(abspath.split("/")[:-1])
-        if not os.path.isdir(parents):
-            print(f"Output directory does not exist. Creating parent(s): {parents}\n", flush=True)
-            os.makedirs(parents)
-    return abspath
-
 def parse_args():
     # add descriptions to arguments later
     parser = argparse.ArgumentParser()
@@ -361,12 +341,16 @@ def parse_args():
 
 def main():
     args = parse_args()
-    # if running on its own, will use command-line arguments; otherwise, pass arguments for this function
-    # options must be a dictionary of valid options for this module
     
-    # need to change out all these options arguments
+    infile = find_path(args.infile, action="r").replace("\\", "/")
+    print(f"Processing sequences from {infile} \n", flush=True)
+    with open(infile, "r") as f:
+        seqs = "".join(f.readlines())
     
-    alignment = read_alignment(find_path(args.infile, "r"))
+    out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
+    print(f"Storing outputs in {out_directory}\n", flush=True)
+    
+    alignment = read_alignment(infile)
     alignment.set_disp_names(uniprot_format=args.uniprot_format)
     
     annotations = args.annotations
@@ -378,7 +362,7 @@ def main():
         features = "FALSE"
     alignment.add_features(annotations) # add nothing if annotations aren't set
     
-    create_svg(alignment, find_path(args.out_directory, "w") , codes=args.codes, nums=args.nums, features=features)
+    create_svg(alignment, find_path(out_directory, "w") , codes=args.codes, nums=args.nums, features=features)
 
 if __name__ == "__main__":
     main()
