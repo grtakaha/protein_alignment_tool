@@ -4,7 +4,7 @@ NOTE: The following do not have command-line support for different BLAST and Clu
 
 # REQUIREMENTS
 General:\
-	&emsp;&emsp;Internet connection\
+	&emsp;&emsp;Internet connection (when running blast.py, retrieve_annotations.py, and/or alignment.py)\
 	&emsp;&emsp;Python 3.7+
 
 Python Libraries:\
@@ -167,10 +167,10 @@ optional arguments:\
   &ensp;-ord ORDER [ORDER ...], --order ORDER [ORDER ...]\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Order of tools to run if "multi" is used as a positional argument. There are currently limited ways to run multi (inputs and outputs will vary depending on start and end):\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align svg\
-			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate svg\
 			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align\
-			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate\
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate\
+			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate svg\
+                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align svg\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align\
                         &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast\
