@@ -6,7 +6,7 @@ import pandas as pd
 import json
 import clustal_to_svg as cts
 import api_funcs as af
-from helpers import find_path, fasta_to_df
+from helpers import find_path, fasta_to_df, read_alignment
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -48,7 +48,7 @@ def main():
                 acc = infile_df.loc[p, "Accession"][1:]
             proteins.append((p, acc.split(" ")[0])) # cannot handle when something is labeled "QUERY", but has the same uniprot ID
     elif infile.endswith(".clustal") or infile.endswith(".clustal_num"):
-        alignment = cts.read_alignment(infile)
+        alignment = read_alignment(infile)
         for whole_prot in alignment.proteins:
             proteins.append((whole_prot.split(" ")[0].split("|")[-1], whole_prot))
     else:

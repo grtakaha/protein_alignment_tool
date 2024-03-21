@@ -2,7 +2,7 @@ import protein_classes as pc
 import argparse
 import os
 import pandas as pd
-from helpers import find_path
+from helpers import find_path, read_alignment
 # this is the redesigned clustal_to_svg tool
 
 def get_max_header(alignment, nums="FALSE"):
@@ -279,7 +279,7 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
                 
         svg += f"</svg>"
         
-        out = f"{out_directory}{i}.svg"
+        out = f"{out_directory}{i}.svg".replace("\\", "/")
         with open(out, "w") as o:
             print(f"Writing part {i} to {out}.", flush=True)
             o.write(svg)
@@ -289,41 +289,6 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
     ##### consider not hard-coding centering (don't set x, set center to page)
     ##### add other features back in (like input options)
     ##### add API access to UniProt/database annotations/tabular annotations
-    
-def read_alignment(infile, max_header=16):
-    ''' max_header is the max length (before 2 spaces are added) of the protein name + spaces.
-    example: max_header=10; protein name + spaces = 12
-    If the given protein name exceeds this value, it will be truncated.
-    '''
-    alignment = pc.Alignment() # empty alignment
-    protein_key = {} # does not contain protein objects; just names and aligned seqs
-    codes = ""
-    header_len = 1000 # set so that it just uses an empty line if there is no header_len set
-    with open(infile, "r") as clust:
-        header = clust.readline() # includes "\n" at the end
-        for line in clust:
-            if line == "\n":
-                continue # skip newlines
-            else:
-                line = line.rstrip("\n") # remove newlines
-                if line[0] != " ": # find lines with protein seqs
-                    l = line.split(" ")
-                    name = l[0]
-                    header_len = len(name) + line.count(" ") # used for codes; depends on codes coming after a block
-                    if name not in protein_key:
-                        protein_key[name] = ""
-                    protein_key[name] += l[-1].split("\t")[0] # sequence
-                else:
-                    codes += line[header_len:] # consider adding own code checker
-    
-    # populate alignment
-    alignment.add_codes(codes)
-    alignment.set_max_header(max_header) # will add 2 spaces regardless; max_header is max accession length
-    for name in protein_key:
-        alignment.add_protein(pc.Protein(name, protein_key[name]))
-    
-    alignment.set_conserved_res() # set conserved residues for the completed alignment
-    return alignment
 
 def parse_args():
     # add descriptions to arguments later
