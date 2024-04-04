@@ -53,7 +53,7 @@ Python Libraries:\
 
 # search_proteins.py
 
-Takes one or more protein sequences (FASTA format) as input and BLASTs them against UniProt databases (RefProt and SwissProt).
+Takes one or more protein sequences (FASTA format) as input and BLASTs them against UniProt databases (uniprotkb_refprotswissprot).
 
 NOTE: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
 
