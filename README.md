@@ -1,6 +1,7 @@
 Collection of scripts used to visualize protein sequences.
 
-NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are currently set with (presumably) default parameters. Settings can be found within the scripts for those who are curious.
+NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. Settings can be found within the scripts for those who are curious. More information can be found in the OpenAPI menus from the following site:\
+	&emsp;&emsp;https://ebi-biows.gitdocs.ebi.ac.uk/documentation/webservices/
 
 NOTE: As per NCBI guidelines, please do not use search_proteins.py for more than 100 searches in a 24 hour period. Limits are in place in an attempt to comply with guidelines listed here:\
 	&emsp;&emsp;https://blast.ncbi.nlm.nih.gov/doc/blast-help/developerinfo.html#rest \
@@ -61,7 +62,7 @@ NOTE: --stype dna is currently not supported in any form. May enter an infinite 
 INPUT: FASTA-formatted file with at least one sequence
 
 OUTPUT: A set of directories - one for each sequence in the original input file - that contain the following:\
-	&emsp;&emsp;the BLAST results for that sequence (the query) against UniProt databases in both outfmt6 ([QUERY].tsv) and readable form ([QUERY].out)\
+	&emsp;&emsp;the BLAST results for that sequence (the query) against UniProt databases in both table ([QUERY].tsv) and readable form ([QUERY].out)\
 	&emsp;&emsp;individual FASTA files with UniProt sequences for each BLAST hit\
 	&emsp;&emsp;one FASTA file containing all protein sequences, including the query sequence (all.fasta)
 

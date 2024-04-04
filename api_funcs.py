@@ -15,16 +15,21 @@ Functions:
     get_metadata(str) -> dict
 """
 
-##### CONDENSE "ID" KIND OF REQUESTS INTO ONE FUNCTION #####
+# time.sleep() pauses are placed in an attempt to comply with usage guidelines:
+# https://blast.ncbi.nlm.nih.gov/doc/blast-help/developerinfo.html#rest
+# https://ebi-biows.gitdocs.ebi.ac.uk/documentation/#fair-use-policy
+
+# TODO: Consider condensing "ID"-type requests into one function.
 # TODO: Limit the number of requests that can be submitted at once.
 # TODO: Get this to work with CLI tools instead; run locally.
+# TODO: Fix potential endless loop if no exception is raised and status != 200.
+# TODO: Make it so that non-UniProt entries don't run infinitely.
 
 import time
 import sys
 import requests
 
-##### SET UP SO THAT IT WILL BLAST MULTIPLE QUERIES AT ONCE AND PARSE #####
-# acc and seq do no have newlines
+# Variables acc and seq do no have newlines
 def blast(email, stype, acc, seq, num_res="10"):
     """
     Takes in BLAST parameters and returns a BLAST job ID against UniProt databases.
@@ -63,15 +68,14 @@ def blast(email, stype, acc, seq, num_res="10"):
         stype = "protein"
         program = "blastp"
 
-    # Variable acc is "accession", without ">"
+    # Variable acc is "accession", without ">".
     print(f"BLASTing {acc}...\n", flush=True)
 
-    # Define the data to be sent in the form
     data = {
         'email': email,
         'program': program,
         'matrix': 'BLOSUM62',
-        'alignments': num_res, # for now, make these the same
+        'alignments': num_res, # For now, make alignments and scores equal.
         'scores': num_res,
         'exp': '10',
         'filter': 'F',
@@ -83,11 +87,10 @@ def blast(email, stype, acc, seq, num_res="10"):
         'database': 'uniprotkb_refprotswissprot'
     }
 
-    # Define the URL
+    # Base URL.
     url = "https://www.ebi.ac.uk/Tools/services/rest/ncbiblast/run"
 
-    # rerun the request until it returns 200
-    # it's possible this becomes an endless loop...deal with that later
+    # Rerun the request until it returns 200.
     current_request = "BLAST query"
     while True:
         try:
@@ -107,7 +110,8 @@ def blast(email, stype, acc, seq, num_res="10"):
                   flush=True)
             sys.exit()
 
-        time.sleep(10) # wait 5 second in-between tries
+        # If query fails, try again after 10 seconds.
+        time.sleep(10)
 
     # Print the response
     return response.text
@@ -122,14 +126,13 @@ def get_blast_results(bid):
         Returns:
             response (tup): A tuple of human readable and tsv BLAST results.
     """
-    # Ensure that queries are spaced out.   
+    # Ensure that queries are spaced out.
     time.sleep(10)
-    
+
     url_out = f"https://www.ebi.ac.uk/Tools/services/rest/ncbiblast/result/{bid}/out"
     url_tsv = f"https://www.ebi.ac.uk/Tools/services/rest/ncbiblast/result/{bid}/tsv"
 
-    # rerun the request until it returns 200
-    # it's possible this becomes an endless loop...deal with that later
+    # Rerun the request until it returns 200.
     current_request = "Default BLAST retrieval"
     while True:
         try:
@@ -150,11 +153,13 @@ def get_blast_results(bid):
                   flush=True)
             sys.exit()
 
-        time.sleep(60) # wait 5 seconds in-between tries
+        # If query fails, try again after 60 seconds.
+        time.sleep(60)
 
+    # Ensure that queries are spaced out.
     time.sleep(10)
-    # rerun the request until it returns 200
-    # it's possible this becomes an endless loop...deal with that later
+
+    # Rerun the request until it returns 200.
     current_request = "TSV BLAST retrieval"
     while True:
         try:
@@ -175,9 +180,10 @@ def get_blast_results(bid):
                   flush=True)
             sys.exit()
 
-        time.sleep(60) # wait 5 seconds in-between tries
+        # If query fails, try again after 60 seconds.
+        time.sleep(60)
 
-    return (response_out.text, response_tsv.text) # tuple of strings
+    return (response_out.text, response_tsv.text) # Tuple of strings
 
 def get_fasta(fid):
     """
@@ -192,8 +198,7 @@ def get_fasta(fid):
 
     url_fasta = f"https://rest.uniprot.org/uniprotkb/{fid}.fasta"
 
-    # rerun the request until it returns 200
-    # it's possible this becomes an endless loop...deal with that later
+    # Rerun the request until it returns 200.
     current_request = "FASTA retrieval"
     while True:
         try:
@@ -212,7 +217,9 @@ def get_fasta(fid):
                   flush=True)
             sys.exit()
 
-        time.sleep(10) # wait 5 seconds in-between tries
+        # If query fails, try again after 10 seconds.
+        time.sleep(10)
+
     print(f"FASTA found for {fid}.\n", flush=True)
 
     return response.text
@@ -233,23 +240,21 @@ def align(email, stype, title, seqs):
             response (str): A Clsutal Omega submission ID.
     """
 
-    # for now, acc is "accession", no ">"
     print(f"Aligning {title}...\n", flush=True)
-    # Define the data to be sent in the form
+
     data = {
         'email': email,
         'outfmt': 'clustal_num',
         'order': 'aligned',
         'title': title,
-        'sequence': seqs, # will be in FASTA format: f'>{acc}\n{seq}\n>{acc}\n{seq}\n'
+        'sequence': seqs, # Will be in FASTA format: f'>{acc}\n{seq}\n>{acc}\n{seq}\n'.
         'stype': stype
     }
 
-    # Define the URL
+    # Base URL.
     url = "https://www.ebi.ac.uk/Tools/services/rest/clustalo/run"
 
-    # rerun the request until it returns 200
-    # it's possible this becomes an endless loop...deal with that later
+    # Rerun the request until it returns 200.
     current_request = "Alignment submission"
     while True:
         try:
@@ -268,10 +273,11 @@ def align(email, stype, title, seqs):
                   flush=True)
             sys.exit()
 
-        time.sleep(10) # wait 5 second in-between tries
+        # If query fails, try again after 10 seconds.
+        time.sleep(10)
 
     print(f"Alignment for {title} submitted with ID: {response.text}.\n", flush=True)
-    # Print the response
+
     return response.text
 
 def get_alignment(aid):
@@ -287,8 +293,7 @@ def get_alignment(aid):
 
     url = f"https://www.ebi.ac.uk/Tools/services/rest/clustalo/result/{aid}/aln-clustal_num"
 
-    # rerun the request until it returns 200
-    # it's possible this becomes an endless loop...deal with that later
+    # Rerun the request until it returns 200.
     current_request = "Alignment retrieval"
     while True:
         try:
@@ -307,7 +312,9 @@ def get_alignment(aid):
                   flush=True)
             sys.exit()
 
-        time.sleep(10) # wait 5 seconds in-between tries
+        # If query fails, try again after 10 seconds.
+        time.sleep(10)
+
     print(f"Alignment found for {aid}.\n", flush=True)
 
     return response.text
@@ -325,8 +332,7 @@ def get_pim(pid):
 
     url = f"https://www.ebi.ac.uk/Tools/services/rest/clustalo/result/{pid}/pim"
 
-    # rerun the request until it returns 200
-    # it's possible this becomes an endless loop...deal with that later
+    # Rerun the request until it returns 200.
     current_request = "PIM retrieval"
     while True:
         try:
@@ -345,7 +351,9 @@ def get_pim(pid):
                   flush=True)
             sys.exit()
 
-        time.sleep(10) # wait 5 seconds in-between tries
+        # If query fails, try again after 10 seconds.
+        time.sleep(10)
+
     print(f"PIM found for {pid}.\n", flush=True)
 
     return response.text
@@ -361,13 +369,14 @@ def get_metadata(mid):
             response (str): A JSON of the given mid's metadata.
     """
 
-    # for now, just returns entire json...consmider extracting annotations only
+    # TODO: Consider returning only annotations.
+    # Returns entire json.
     url_metadata = f"https://rest.uniprot.org/uniprotkb/{mid}"
 
-    # rerun the request until it returns 200
-    # it's possible this becomes an endless loop...deal with that later
-    # Set the headers to accept JSON
+    # Set headers to accept JSON.
     headers = {"Accept": "application/json"}
+
+    # Rerun the request until it returns 200.
     current_request = "Metadata retrieval"
     while True:
         try:
@@ -386,7 +395,9 @@ def get_metadata(mid):
                   flush=True)
             sys.exit()
 
-            time.sleep(10) # wait 5 seconds in-between tries
+        # If query fails, try again after 10 seconds.
+        time.sleep(10) # wait 5 seconds in-between tries
+
     print(f"Metadata retrieved for {mid}.\n", flush=True)
 
     return response_metadata.json()
