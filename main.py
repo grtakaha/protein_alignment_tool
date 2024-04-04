@@ -77,7 +77,7 @@ def execute_tool(args):
         args.annotations = find_outputs(args)[0] # will change args
 
     elif args.tool_name == "blast": # replace with split uniprot_fastas into blast and split blast...
-        subprocess.run(["python", f"{os.path.abspath(os.path.dirname(__file__))}/blast.py", 
+        subprocess.run(["python", f"{os.path.abspath(os.path.dirname(__file__))}/search_proteins.py", 
                         "--infile", args.infile, 
                         "--out_directory", args.out_directory,
                         "--stype", args.stype,
@@ -117,7 +117,7 @@ def execute_tool(args):
                 # run everything from here on out using multi and different inputs
                 infiles = find_outputs(args)
                 print(f"blast tool executed in a multi run.")
-                print(f"Remaining calls ({args.oder}) will be executed on {infiles}.\n")
+                print(f"Remaining calls ({args.order}) will be executed on {infiles}.\n")
                 ##### MAY ERROR OUT BECAUSE +1 MIGHT NOT BE IN RANGE #####
                 args.order = args.order[i+1:] # start after blast call
                 for f in infiles:

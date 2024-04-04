@@ -2,6 +2,46 @@ Collection of scripts used to visualize protein sequences.
 
 NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are currently set with (presumably) default parameters. Settings can be found within the scripts for those who are curious.
 
+NOTE: As per NCBI guidelines, please do not use search_proteins.py for more than 100 searches in a 24 hour period. Limits are in place in an attempt to comply with guidelines listed here:\
+	&emsp;&emsp;https://blast.ncbi.nlm.nih.gov/doc/blast-help/developerinfo.html#rest\
+Currently working on local alternative that will use the NCBI BLAST+ CLI instead.
+
+NOTE: Please follow usage guidelines found here for both search_proteins.py and alignment.py:
+	&emsp;&emsp;https://ebi-biows.gitdocs.ebi.ac.uk/documentation/webservices/
+
+NOTE: These scripts make use of EMBL-EBI and/or NCBI resources. References for tools and databases used here include:\
+
+EMBL-EBI's Job Dispatcher:\
+Madeira, Fábio, Matt Pearce, Adrian R. N. Tivey, Prasad Basutkar, Joon Lee, Ossama Edbali, Nandana Madhusoodanan, Anton Kolesnikov, and Rodrigo Lopez. \
+“Search and Sequence Analysis Tools Services from EMBL-EBI in 2022.” \
+Nucleic Acids Research 50, no. W1 (July 5, 2022): W276–79. https://doi.org/10.1093/nar/gkac240.
+
+UniProt:\
+The UniProt Consortium. \
+“UniProt: The Universal Protein Knowledgebase in 2023.” \
+Nucleic Acids Research 51, no. D1 (January 6, 2023): D523–31. https://doi.org/10.1093/nar/gkac1052.
+
+NCBI:\
+Sayers, Eric W, Evan E Bolton, J Rodney Brister, Kathi Canese, Jessica Chan, Donald C Comeau, Ryan Connor, et al. \
+“Database Resources of the National Center for Biotechnology Information.” \
+Nucleic Acids Research 50, no. D1 (December 1, 2021): D20–26. https://doi.org/10.1093/nar/gkab1112.
+
+Clustal Omega:\
+Sievers, Fabian, Andreas Wilm, David Dineen, Toby J Gibson, Kevin Karplus, Weizhong Li, Rodrigo Lopez, et al. \
+“Fast, Scalable Generation of High‐quality Protein Multiple Sequence Alignments Using Clustal Omega.” \
+Molecular Systems Biology 7, no. 1 (January 2011): 539. https://doi.org/10.1038/msb.2011.75.
+
+Sievers, Fabian, and Desmond G. Higgins. \
+“Clustal Omega for Making Accurate Alignments of Many Protein Sequences.” \
+Protein Science: A Publication of the Protein Society 27, no. 1 (January 2018): 135–45. https://doi.org/10.1002/pro.3290.
+
+BLAST+:\
+Camacho, Christiam, George Coulouris, Vahram Avagyan, Ning Ma, Jason Papadopoulos, Kevin Bealer, and Thomas L. Madden. \
+“BLAST+: Architecture and Applications.” \
+BMC Bioinformatics 10, no. 1 (December 2009): 1–9. https://doi.org/10.1186/1471-2105-10-421.
+
+https://blast.ncbi.nlm.nih.gov/doc/blast-help/references.html#references
+
 # REQUIREMENTS
 General:\
 	&emsp;&emsp;Internet connection (when running blast.py, retrieve_annotations.py, and/or alignment.py)\
@@ -11,7 +51,7 @@ Python Libraries:\
 	&emsp;&emsp;pandas\
 	&emsp;&emsp;requests
 
-# blast.py
+# search_proteins.py
 
 Takes one or more protein sequences (FASTA format) as input and BLASTs them against UniProt databases (RefProt and SwissProt).
 

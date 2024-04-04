@@ -1,4 +1,4 @@
-'''
+"""
 Helper functions for reading files.
 
 Extra imports:
@@ -11,7 +11,8 @@ Functions:
     find_path(str, str) -> str
     fasta_to_df(str) -> pandas.DataFrame
     read_alignment(str, int) -> protein_classes.Alignment
-'''
+"""
+
 import os
 import sys
 import pandas as pd
@@ -20,17 +21,17 @@ import protein_classes as pc
 # change action to rf, wf, rd, wd instead for read vs. write, file vs. directory
 # change text output accordingly.
 def find_path(path, action):
-    '''
+    """
     Returns full path of inputs based on current working directory.
 
-            Parameters:
-                    path (str): Full or relative path based on current working directory.
-                                "./", "../", etc. are acceptable.
-                    action (str): Either "r" (for input files) or "w" (for output directories).
+        Parameters:
+            path (str):   Full or relative path based on current working directory.
+                          "./", "../", etc. are acceptable.
+            action (str): Either "r" (for input files) or "w" (for output directories).
 
-            Returns:
-                    abspath (str): Full path of the given input.
-    '''
+        Returns:
+            abspath (str): Full path of the given input.
+    """
 
     if path[-1] == "/":
         abspath = os.path.abspath(path) + "/"
@@ -49,16 +50,16 @@ def find_path(path, action):
     return abspath
 
 def fasta_to_df(file):
-    '''
+    """
     Takes in a FASTA-formatted file and returns a pandas DataFrame of the input sequences.
 
-            Parameters:
-                    file (str): Full path to a FASTA-formatted file
+        Parameters:
+            file (str): Full path to a FASTA-formatted file
 
-            Returns:
-                    fasta_df (pandas.DataFrame): pandas DataFrame with short form UniProt ID indexes
-                                                 columns=[Accession, IDs, Sequence]
-    '''
+        Returns:
+            fasta_df (pandas.DataFrame): pandas DataFrame with short form UniProt ID indexes
+                                         columns=[Accession, IDs, Sequence]
+    """
 
     with open(file, "r", encoding="utf-8") as fasta:
         accessions = []
@@ -75,18 +76,18 @@ def fasta_to_df(file):
     return pd.DataFrame({"Accession": accessions, "IDs": ids, "Sequence": seqs}).set_index("IDs")
 
 def read_alignment(infile, max_header=16):
-    '''
+    """
     Takes in a .clustal or .clustal_num file and returns a protein_classes Alignment object.
 
-            Parameters:
-                    infile (str): Full path to a CLUSTAL- or CLUSTAL_NUM-formatted file.
-                    max_header (int): Maximum length of displayed protein names
-                                      when an Alignment object is written to an SVG.
+        Parameters:
+            infile (str):     Full path to a CLUSTAL- or CLUSTAL_NUM-formatted file.
+            max_header (int): Maximum length of displayed protein names
+                              when an Alignment object is written to an SVG.
 
-            Returns:
-                    alignment (protein_classes.Alignment): Alignment object created from the
-                                                           given Clustal Omega alignment.
-    '''
+        Returns:
+            alignment (protein_classes.Alignment): Alignment object created from the
+                                                   given Clustal Omega alignment.
+    """
 
     # max_header is the max length (before 2 spaces are added) of the protein name + spaces.
     # example: max_header=10; protein name + spaces = 12
