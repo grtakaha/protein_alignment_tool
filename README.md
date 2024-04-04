@@ -9,7 +9,7 @@ Currently working on local alternative that will use the NCBI BLAST+ CLI instead
 NOTE: Please follow usage guidelines found here for both search_proteins.py and alignment.py:\
 	&emsp;&emsp;https://ebi-biows.gitdocs.ebi.ac.uk/documentation/webservices/
 
-NOTE: These scripts make use of EMBL-EBI and/or NCBI resources. References for tools/databases used here include: \
+NOTE: These scripts make use of EMBL-EBI and/or NCBI resources. References for tools and databases used here include:
 
 EMBL-EBI's Job Dispatcher:\
 Madeira, Fábio, Matt Pearce, Adrian R. N. Tivey, Prasad Basutkar, Joon Lee, Ossama Edbali, Nandana Madhusoodanan, Anton Kolesnikov, and Rodrigo Lopez. \
