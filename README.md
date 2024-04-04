@@ -45,7 +45,7 @@ https://blast.ncbi.nlm.nih.gov/doc/blast-help/references.html#references
 
 # REQUIREMENTS
 General:\
-	&emsp;&emsp;Internet connection (when running blast.py, retrieve_annotations.py, and/or alignment.py)\
+	&emsp;&emsp;Internet connection (when running search_proteins.py, retrieve_annotations.py, and/or alignment.py)\
 	&emsp;&emsp;Python 3.7+
 
 Python Libraries:\
