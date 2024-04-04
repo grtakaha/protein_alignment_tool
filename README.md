@@ -179,7 +179,7 @@ optional arguments:\
 
 # main.py
 
-Runs one, two, or all of the above in the order given.
+Runs one or more of the above in the order given.
 
 INPUT: Depends on which tool(s) are being executed. Should be an acceptable input of the first tool being executed. Inputs for runs that start with annotate.py may additionally be limited by what can be passed to downstream tools.  Example: multi --order annotate svg -> must use .clustal or .clustal_num file as input (.fasta file cannot be used by clustal_to_svg.py)
 
