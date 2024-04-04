@@ -3,13 +3,13 @@ Collection of scripts used to visualize protein sequences.
 NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. They are currently set with (presumably) default parameters. Settings can be found within the scripts for those who are curious.
 
 NOTE: As per NCBI guidelines, please do not use search_proteins.py for more than 100 searches in a 24 hour period. Limits are in place in an attempt to comply with guidelines listed here:\
-	&emsp;&emsp;https://blast.ncbi.nlm.nih.gov/doc/blast-help/developerinfo.html#rest\
+	&emsp;&emsp;https://blast.ncbi.nlm.nih.gov/doc/blast-help/developerinfo.html#rest \
 Currently working on local alternative that will use the NCBI BLAST+ CLI instead.
 
-NOTE: Please follow usage guidelines found here for both search_proteins.py and alignment.py:
+NOTE: Please follow usage guidelines found here for both search_proteins.py and alignment.py:\
 	&emsp;&emsp;https://ebi-biows.gitdocs.ebi.ac.uk/documentation/webservices/
 
-NOTE: These scripts make use of EMBL-EBI and/or NCBI resources. References for tools and databases used here include:\
+NOTE: These scripts make use of EMBL-EBI and/or NCBI resources. References for tools and databases used here include: \
 
 EMBL-EBI's Job Dispatcher:\
 Madeira, Fábio, Matt Pearce, Adrian R. N. Tivey, Prasad Basutkar, Joon Lee, Ossama Edbali, Nandana Madhusoodanan, Anton Kolesnikov, and Rodrigo Lopez. \
