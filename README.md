@@ -51,6 +51,7 @@ Python Libraries:\
 	&emsp;&emsp;pandas\
 	&emsp;&emsp;requests
 
+
 # search_proteins.py
 
 Takes one or more protein sequences (FASTA format) as input and BLASTs them against UniProt databases (uniprotkb_refprotswissprot).
