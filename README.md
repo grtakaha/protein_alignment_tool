@@ -1,7 +1,7 @@
 Collection of scripts used to visualize protein sequences.
 
 Update 2024.04.08: BLAST and Clustal Omega API calls have been removed and replaced by calls to local installations:
-https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ \n
+https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ \
 http://www.clustal.org/omega/
 
 NOTE: The above just need to be unpacked and added to Path/PATH/etc.
