@@ -66,41 +66,43 @@ def main():
     out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
     print(f"Storing outputs in {out_directory}\n", flush=True)
 
-    # TODO: BLAST all at once in a batch query instead of one at a time.
-    blast_dict = {}
+    # Check for Swiss-Prot files in installation path.
+    af.verify_sprot()
+    
+    # TODO: Add readable results back in. Right now it only outputs outfmt6.
     for protein in infile_df.index.values:
+        print(f"BLASTing {protein}...", flush=True)
+        
         sequence = infile_df.loc[protein]["Sequence"]
         accession = infile_df.loc[protein]["Accession"] # includes ">"
 
-        blast_id = af.blast(args.email, args.stype, protein, sequence, num_res=args.num_res)
-        blast_dict[protein] = blast_id
-
         prot_directory = find_path(f"{out_directory}/{protein}/", action="w")
+        out_prefix = f"{prot_directory}/{protein}"
+        
+        # Saves a FASTA query file.
+        query = f"{prot_directory}/{protein}.fasta"
+        with open(query, "w", encoding="utf-8") as q_fasta:
+            q_fasta.write(f"{accession}\n{sequence}\n")
+        
+        af.blast(query, args.stype, f"{out_prefix}", num_res=args.num_res)
+
+        with open(f"{out_prefix}.tsv", "r") as b_res:
+            blast_results = b_res.read()
 
         # Overwrites output all.fasta if it exists.
         with open(f"{prot_directory}/all.fasta", "w", encoding="utf-8") as all_fasta:
             all_fasta.write(f"{accession[0]}QUERY_{accession[1:]}\n{sequence}\n")
 
-    # TODO: BLAST all at once in a batch query instead of one at a time.
-    for protein in blast_dict:
-        blast_results = af.get_blast_results(blast_dict[protein])
-
-        # Filepath prot_directory should already be created; no find_path necessary.
-        prot_directory = f"{out_directory}/{protein}/"
-
-        with open(f"{prot_directory}/{protein}.out", "w", encoding="utf-8") as out:
-            out.write(blast_results[0])
-        with open(f"{prot_directory}/{protein}.tsv", "w", encoding="utf-8") as tsv:
-            tsv.write(blast_results[1])
-
-        # Parse blast_results[1] (tsv form).
-        # Skip first line (headers) and last line (empty).
-        for line in blast_results[1].split("\n")[1:-1]:
-            hit = line.split("\t")[2]
+        # Parse blast_results (tsv form).
+        # Skip last line (empty).
+        # No header in command-line blastp outfmt6.
+        for line in blast_results.split("\n")[0:-1]:
+            hit = line.split("\t")[1]
             print(f"Found BLAST hit: {hit}\n", flush=True)
-            hit_fasta = af.get_fasta(hit)
-            hit_filename = hit_fasta.split("\n")[0].split(" ")[0].split("|")[-1]
-            with open(f"{prot_directory}/{hit_filename}.fasta", "w", encoding="utf-8") as fasta:
+            
+            hit_name = hit.split(" ")[0].split("|")[-1]
+            hit_fasta = af.get_fasta(hit_name)
+            with open(f"{prot_directory}/{hit_name}.fasta", "w", encoding="utf-8") as fasta:
                 fasta.write(hit_fasta)
             with open(f"{prot_directory}/all.fasta", "a", encoding="utf-8") as all_fasta:
                 all_fasta.write(hit_fasta)

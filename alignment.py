@@ -58,8 +58,8 @@ def main():
 
     infile = find_path(args.infile, action="r").replace("\\", "/")
     print(f"Processing sequences from {infile} \n", flush=True)
-    with open(infile, "r", encoding="utf-8") as f_temp:
-        seqs = "".join(f_temp.readlines())
+    #with open(infile, "r", encoding="utf-8") as f_temp:
+        #seqs = "".join(f_temp.readlines())
 
     out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
     print(f"Storing outputs in {out_directory}\n", flush=True)
@@ -73,18 +73,25 @@ def main():
 
     title = args.title
 
-    aid = af.align(args.email, stype, title, seqs)
-    alignment = af.get_alignment(aid)
-    pim = af.get_pim(aid)
+    # Run the alignment via command-line subprocess
+    af.align(infile, stype, out_directory, title)
+    
+    
+    
+    
+    
+    #aid = af.align(infile, stype, f"{out_directory}/{title}", seqs)
+    #alignment = af.get_alignment(aid)
+    #pim = af.get_pim(aid)
 
-    alignment_file = f"{out_directory}/{title}.clustal_num"
-    pim_file = f"{out_directory}/{title}.pim"
+    #alignment_file = f"{out_directory}/{title}.clustal_num"
+    #pim_file = f"{out_directory}/{title}.pim"
 
-    print(f"Saving {title} alignment to {alignment_file}.", flush=True)
-    with open(alignment_file, "w", encoding="utf-8") as f_temp:
-        f_temp.write(alignment) # just overwriting it if it exists
-    with open(pim_file, "w", encoding="utf-8") as p_temp:
-        p_temp.write(pim) # just overwriting if it exists
+    #print(f"Saving {title} alignment to {alignment_file}.", flush=True)
+    #with open(alignment_file, "w", encoding="utf-8") as f_temp:
+        #f_temp.write(alignment) # just overwriting it if it exists
+    #with open(pim_file, "w", encoding="utf-8") as p_temp:
+        #p_temp.write(pim) # just overwriting if it exists
 
 if __name__ == "__main__":
     main()
