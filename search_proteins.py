@@ -36,11 +36,13 @@ def parse_args():
 
     parser.add_argument("-i", "--infile", help="Full path of input file.")
     # TODO: Fix_outdirectory so that "/" isn't necessary at the end.
-    parser.add_argument("-o", "--out_directory", default="./", 
+    parser.add_argument("-o", "--out_directory", default="./",
                         help="Full path of output directory. Must end with \"/\".")
     parser.add_argument("-s", "--stype", default="protein",
                         help="Sequence type (\"protein\" or \"dna\").")
-    parser.add_argument("-e", "--email", help="Personal email. Used to submit BLAST and Clustal Omega jobs.")
+    # TODO: Remove email requirement.
+    parser.add_argument("-e", "--email", help="Personal email. " +
+                        "Used to submit BLAST and Clustal Omega jobs.")
     parser.add_argument("-nr", "--num_res", default="10", help="Number of results.")
 
     return parser.parse_args()
@@ -68,25 +70,25 @@ def main():
 
     # Check for Swiss-Prot files in installation path.
     af.verify_sprot()
-    
+
     # TODO: Add readable results back in. Right now it only outputs outfmt6.
     for protein in infile_df.index.values:
         print(f"BLASTing {protein}...", flush=True)
-        
+
         sequence = infile_df.loc[protein]["Sequence"]
-        accession = infile_df.loc[protein]["Accession"] # includes ">"
+        accession = infile_df.loc[protein]["Accession"] # Includes ">".
 
         prot_directory = find_path(f"{out_directory}/{protein}/", action="w")
         out_prefix = f"{prot_directory}/{protein}"
-        
+
         # Saves a FASTA query file.
         query = f"{prot_directory}/{protein}.fasta"
         with open(query, "w", encoding="utf-8") as q_fasta:
             q_fasta.write(f"{accession}\n{sequence}\n")
-        
+
         af.blast(query, args.stype, f"{out_prefix}", num_res=args.num_res)
 
-        with open(f"{out_prefix}.tsv", "r") as b_res:
+        with open(f"{out_prefix}.tsv", "r", encoding="utf-8") as b_res:
             blast_results = b_res.read()
 
         # Overwrites output all.fasta if it exists.
@@ -99,7 +101,7 @@ def main():
         for line in blast_results.split("\n")[0:-1]:
             hit = line.split("\t")[1]
             print(f"Found BLAST hit: {hit}\n", flush=True)
-            
+
             hit_name = hit.split(" ")[0].split("|")[-1]
             hit_fasta = af.get_fasta(hit_name)
             with open(f"{prot_directory}/{hit_name}.fasta", "w", encoding="utf-8") as fasta:

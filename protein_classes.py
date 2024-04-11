@@ -54,15 +54,15 @@ class Alignment:
         prot_list = list(self.proteins.values())
         while i <= len(prot_list[0].sequence): # break out when sequences have been entirely gone through
             conserved = True
-            c0 = prot_list[0].sequence[i-1]
+            res_0 = prot_list[0].sequence[i-1]
             for p in prot_list[1:]:
-                c_new = p.sequence[i-1]
-                if c0 != c_new or c0 == "-" or c_new == "-":
+                res_new = p.sequence[i-1]
+                if res_0 != res_new or res_0 == "-" or res_new == "-":
                     conserved = False
                     break # breaks out of this inner for loop
                 
             if conserved:
-                self.conserved_res.append((c0, i))
+                self.conserved_res.append((res_0, i))
             i += 1
             
     def add_protein(self, protein):
