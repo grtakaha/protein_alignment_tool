@@ -379,26 +379,27 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
     x_start, y_start = 9.317, 28.5
 
     # Format lines
-    text = format_alignment(alignment, codes=codes, nums=nums) # returns list of lines
+    text = format_alignment(alignment, codes=codes, nums=nums) # Returns list of lines.
 
     lines_per_block = len(alignment.proteins) + 2
-    svgs = split_lines(text, lines_per_block) # list of svgs with up to 72 lines each
+    svgs = split_lines(text, lines_per_block) # List of svgs with up to 72 lines each.
 
     max_header = get_max_header(alignment, nums=nums)
     feature_coords = get_feature_coords(alignment, nums=nums)
     conserved_coords = get_conserved_coords(alignment, nums=nums)
 
-    relevant_features = ["Active site"] # add more later
+    relevant_features = ["Active site"] # TODO: Add more valid features.
 
-    aa_counts = {} # use display names and keep track of aa#
-    line_counts = {} # use display names and keep track of line#
-    #clust_num = 0 # 0-indexed because it is not counting just aa... it is counting positions in the alignment
+    aa_counts = {} # Use display names and keep track of aa#.
+    line_counts = {} # Use display names and keep track of line#.
+
     aa_list = ["R", "H", "K", "D", "E", "S", "T",
                "N", "Q", "C", "G", "P", "A", "V",
                "I", "L", "M", "F", "Y", "W"]
 
     for i, lines in enumerate(svgs):
 
+        # Inkscape SVG things.
         svg = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n"
         svg += "<svg baseProfile=\"full\" "
         svg += "height=\"9in\" version=\"1.1\" width=\"7.5in\" "
@@ -423,7 +424,8 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
                 header = line[:max_header+2]
                 current_prot = header.split(" ")[0]
                 if current_prot not in aa_counts:
-                    aa_counts[current_prot] = 0 # start at 0 and increment when valid AA is found
+                    # Start at 0 and increment when valid AA is found.
+                    aa_counts[current_prot] = 0
 
             if current_prot not in line_counts:
                 line_counts[current_prot] = 0
@@ -509,8 +511,6 @@ def main():
 
     infile = find_path(args.infile, action="r").replace("\\", "/")
     print(f"Processing sequences from {infile} \n", flush=True)
-    #with open(infile, "r", encoding="utf-8") as align_file:
-        #seqs = "".join(align_file.readlines())
 
     out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
     print(f"Storing outputs in {out_directory}\n", flush=True)
