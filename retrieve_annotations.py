@@ -68,7 +68,7 @@ def remove_query(uniprot_df):
                 uniprot_df = uniprot_df.drop(uniprot_df[uniprot_df["Accession"] == acc].index)
     return uniprot_df
 
-def main():
+def main(args):
     """
     Parses an input FASTA file and saves UniProt annotations.
 
@@ -78,7 +78,7 @@ def main():
                 One combined annotation file for these sequences (all.ann).
     """
 
-    args = parse_args()
+    #args = parse_args()
 
     infile = find_path(args.infile, action="r").replace("\\", "/")
     print(f"Processing sequences from {infile}\n", flush=True)
@@ -142,4 +142,5 @@ def main():
     all_features_df.to_csv(f"{out_directory}/all.ann", sep="\t")
 
 if __name__ == "__main__":
-    main()
+    args = parse_args()
+    main(args)

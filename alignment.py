@@ -46,7 +46,7 @@ def parse_args():
 
     return parser.parse_args()
 
-def main():
+def main(args):
     """
     Aligns an input FASTA file with Clustal Omega.
 
@@ -55,7 +55,7 @@ def main():
             created from the input FASTA file.
     """
 
-    args = parse_args()
+    #args = parse_args()
 
     infile = find_path(args.infile, action="r").replace("\\", "/")
     print(f"Processing sequences from {infile} \n", flush=True)
@@ -76,4 +76,5 @@ def main():
     af.align(infile, stype, out_directory, title)
 
 if __name__ == "__main__":
-    main()
+    args = parse_args()
+    main(args)

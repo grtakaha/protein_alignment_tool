@@ -47,7 +47,7 @@ def parse_args():
 
     return parser.parse_args()
 
-def main():
+def main(args):
     """
     Parses an input FASTA file and saves UniProt BLAST results in separate directories.
 
@@ -59,7 +59,6 @@ def main():
     """
 
     # TODO: Add in translation feature later maybe...or just remove dna.
-    args = parse_args()
 
     infile = find_path(args.infile, action="r").replace("\\", "/")
     print(f"Processing sequences from {infile}\n", flush=True)
@@ -110,4 +109,5 @@ def main():
                 all_fasta.write(hit_fasta)
 
 if __name__ == "__main__":
-    main()
+    args = parse_args()
+    main(args)

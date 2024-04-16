@@ -76,9 +76,10 @@ def format_alignment(alignment, codes="FALSE", nums="FALSE"):
     counts = {} # count of amino acids for each protein
 
     # Base sequence length around this first Protein object.
+    # Messy, but order of proteins matters for line IDs in create_svg().
     prot1 = list(alignment.proteins.values())[0]
     for i in range(0, len(prot1.sequence), 100):
-        for name in alignment.proteins: # gives names only
+        for name in alignment.proteins: # Gives full names only.
             lines.append("") # start of a new line
             prot = alignment.proteins[name]
 
@@ -207,6 +208,13 @@ def get_feature_coords(alignment, lines_per_svg=72, nums="FALSE"):
 
         # I realize this is all very repetitive...it was the only way I could think about it.
         for feature in protein.features:
+            # If clust_start or clust_end is still set to None, skip feature.
+            if not feature.clust_start or not feature.clust_end:
+                print(f"{feature.feature_type} in {protein.name} " +
+                      "is missing some or all position information.", flush=True)
+                print(f"Skipping...\n", flush=True)
+                # Skip remaining code for this feature
+                continue
             tot_block_num = int(i / 100) + min(1, i % 100) # 1-indexed
 
             # Necessary for svg #
@@ -412,6 +420,8 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
         svg += f"xml:space=\"preserve\" x=\"{x_start}\" y=\"{y_start}\">"
 
         # TODO: Consider removing need to re-split.
+        prot_num = 0 # Protein number in list(alignment.proteins)
+        prot_names = list(alignment.proteins) # Keys. Full protein names.
         for line in lines:
             # Important to add this back in, or they will not act like lines.
             line += "\n"
@@ -422,10 +432,12 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
             else:
                 # Protein name and spaces.
                 header = line[:max_header+2]
-                current_prot = header.split(" ")[0]
+                #current_prot = header.split(" ")[0]
+                current_prot = prot_names[prot_num % len(prot_names)]
                 if current_prot not in aa_counts:
                     # Start at 0 and increment when valid AA is found.
                     aa_counts[current_prot] = 0
+                prot_num += 1 # Increase number once a protein is found.
 
             if current_prot not in line_counts:
                 line_counts[current_prot] = 0
@@ -449,7 +461,7 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
                 feature = f_info[0]
                 if feature.feature_type in relevant_features:
                     print(f"{feature.feature_type} found for " +
-                          f"{f_info[3]}, residue {feature.start}, " +
+                          f"{f_info[3]}, residue {feature.start}{feature.sequence}, " +
                           f"alignment position {feature.clust_start}. " +
                           f"Adding to {i}.svg.", flush=True)
                     svg += create_feature(f_info[0], f_info[1], f_info[2]) # feature, x, y
@@ -498,7 +510,7 @@ def parse_args():
 
     return parser.parse_args()
 
-def main():
+def main(args):
     """
     Converts a given Clustal alignment to a reformatted Inkscape SVG.
 
@@ -507,7 +519,7 @@ def main():
             SVGs are named 0.svg, 1.svg, etc.
     """
 
-    args = parse_args()
+    #args = parse_args()
 
     infile = find_path(args.infile, action="r").replace("\\", "/")
     print(f"Processing sequences from {infile} \n", flush=True)
@@ -531,4 +543,5 @@ def main():
                codes=args.codes, nums=args.nums, features=features)
 
 if __name__ == "__main__":
-    main()
+    args = parse_args()
+    main(args)

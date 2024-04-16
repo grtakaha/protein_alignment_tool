@@ -7,6 +7,8 @@ Classes:
     Feature
 """
 
+import math
+
 class Protein:
     """
     Stores sequences, names, and features of a protein.
@@ -52,6 +54,9 @@ class Protein:
         for position in self.sequence:
             if raw_count == feature.start:
                 clust_start = clust_count
+                if feature.start == feature.end:
+                    clust_end = clust_count
+                    break # End the loop if start and end found.
             elif raw_count == feature.end:
                 clust_end = clust_count
                 break # End the loop once it finds the end of the feature.
@@ -59,6 +64,9 @@ class Protein:
             if position != "-":
                 raw_count += 1
 
+        # clust_start and clust_end are 1-indexed.
+        if feature.start and feature.end: 
+            feature.set_seq(self.seq_raw[feature.start-1:feature.end])
         feature.set_clust_positions(clust_start, clust_end)
         self.features.append(feature)
 
@@ -183,6 +191,17 @@ class Alignment:
             start = row[annotations.columns.get_loc("location.start.value")]
             end = row[annotations.columns.get_loc("location.end.value")]
 
+            # If no start or end, set those values to None.
+            # If they exist, make them integers.
+            if math.isnan(float(start)):
+                start = None
+            else:
+                start = int(start)
+            if math.isnan(float(end)):
+                end = None
+            else:
+                end = int(end)
+
             feature = Feature(feature_type, start, end, row.description)
             self.proteins[row.whole_prot].add_feature(feature)
 
@@ -237,6 +256,7 @@ class Feature:
         self.clust_start = None # Set when added to Protein.
         self.clust_end = None # Set when added to Protein.
         self.description = description
+        self.sequence = None # Set when added to Protein.
         # TODO: Consider adding self.sequence in order to identify later...
 
     # Clustal positions based on start and end.
@@ -249,6 +269,19 @@ class Feature:
             clust_start (int): Start Clustal position for this Feature.
             clust_end (int): End Clustal position for this Feature.
         """
-
+        
+        #print("Set Clustal positions " + str(clust_start) +
+              #" " + str(clust_end), flush=True)
         self.clust_start = clust_start
         self.clust_end = clust_end
+
+    def set_seq(self, sequence):
+        """
+        Sets sequence for Feature.
+
+        Parameters:
+            sequence (str): Amino acid sequence (no gaps) of this Feature.
+        """
+
+        #print("Set sequence " + str(sequence), flush=True)
+        self.sequence = sequence
