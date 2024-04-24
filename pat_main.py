@@ -277,7 +277,7 @@ def find_outputs(args):
             new_inputs.append(f"{args.out_directory}/{prot}/all.fasta".replace("//", "/"))
     elif tool_name == "align":
         # TODO: Either make clustalo output .clustal_num, or change this to .clustal.
-        new_inputs.append(f"{args.out_directory}/{args.title}.clustal_num".replace("//", "/"))
+        new_inputs.append(f"{args.out_directory}/{args.title}.clustal".replace("//", "/"))
     elif tool_name == "svg":
         pass # Not necessary to return anything because svg is the end of the line.
     return new_inputs
