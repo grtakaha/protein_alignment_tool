@@ -48,7 +48,8 @@ def parse_args():
     # Ex. -i ./infile.fasta -o ./out_dir annotate
 
     parser.add_argument("-i", "--infile", type=str, help="Full path of input file")
-    parser.add_argument("-o", "--out_directory", type=str, help="Full path of output directory")
+    parser.add_argument("-o", "--out_directory", type=str,
+                        help="Full path of output directory. Must end with \"/\".")
 
     ## must be after -i and -o (positional)
     #subparsers = parser.add_subparsers(dest='tool_name', help='Tool to execute')
@@ -75,16 +76,28 @@ def parse_args():
 
     #multi = subparsers.add_parser("multi")
     # Will provide a list of 1 or more tools to use with these arguments
-    parser.add_argument("-ord", "--order", nargs="+")
-    parser.add_argument("-s", "--stype", default="protein")
-    parser.add_argument("-e", "--email", default="")
-    parser.add_argument("-nr", "--num_res", default="10")
-    parser.add_argument("-t", "--title", default="alignment")
+    parser.add_argument("-ord", "--order", nargs="+",
+                        help="Order of tools to run (blast, annotate, align, svg)." +
+                        "Ex. --order align svg")
+    parser.add_argument("-s", "--stype", default="protein",
+                        help="Sequence type (\"protein\" or \"dna\").")
+    #parser.add_argument("-e", "--email", default="")
+    parser.add_argument("-nr", "--num_res", default="10",
+                        help="Number of results.")
+    parser.add_argument("-t", "--title", default="alignment",
+                        help="Alignment title ([TITLE].clustal, [TITLE].pim).")
     parser.add_argument("-c", "--codes", default="FALSE")
-    parser.add_argument("-n", "--nums", default="FALSE")
-    parser.add_argument("-u", "--uniprot_format", default="FALSE")
+    parser.add_argument("-n", "--nums", default="FALSE",
+                        help="When set to TRUE, includes total residue numbers " +
+                        "at the end of each line."                        )
+    parser.add_argument("-u", "--uniprot_format", default="TRUE",
+                        help="When set to TRUE, truncates all accessions as if " +
+                        "they were UniProt entries.\n" +
+                        "Ex. sp|P00784|PAPA1_CARPA -> PAPA1_CARPA"                        )
     # Will annotate if this is provided at all; cannot be nonetype.
-    parser.add_argument("-a", "--annotations", default="")
+    parser.add_argument("-a", "--annotations", default="",
+                        help="If an annotation file is provided, it will be " +
+                        "used to annotate the resulting SVG files."                        )
 
     return parser.parse_args()
 
@@ -258,7 +271,7 @@ def find_outputs(args):
         # This is a TSV of all annotations for a particular FASTA.
         new_inputs.append(f"{args.out_directory}/all.ann".replace("//", "/"))
     elif tool_name == "blast":
-        proteins = fasta_to_df(find_path(args.infile, "r"))
+        proteins = fasta_to_df(find_path(args.infile, "r", "f"))
         for prot in proteins.index.values:
             # Fastas of blast hits.
             new_inputs.append(f"{args.out_directory}/{prot}/all.fasta".replace("//", "/"))

@@ -18,35 +18,44 @@ import sys
 import pandas as pd
 import protein_classes as pc
 
-# change action to rf, wf, rd, wd instead for read vs. write, file vs. directory
-# change text output accordingly.
-def find_path(path, action):
+def find_path(path, action, path_type):
     """
     Returns full path of inputs based on current working directory.
 
         Parameters:
             path (str):   Full or relative path based on current working directory.
                           "./", "../", etc. are acceptable.
-            action (str): Either "r" (for input files) or "w" (for output directories).
+            action (str): Either "r" (for inputs) or "w" (for outputs).
+            path_type (str): Either "f" (for files) or "d" (for directories).
 
         Returns:
             abspath (str): Full path of the given input.
     """
 
-    if path[-1] == "/":
-        abspath = os.path.abspath(path) + "/"
-    else:
-        abspath = os.path.abspath(path)
+    # abspath() removes "/" at the end.
+    abspath = os.path.abspath(path).replace("\\", "/")
+    if path_type == "d":
+        abspath += "/" # Add "/" so that the following will work.
 
-    if action == "r":
-        if not os.path.isfile(abspath):
-            print(f"No file found at {abspath}. Exiting.\n", flush=True)
-            sys.exit() # check if working
-    elif action == "w":
+    # In addition to finding the above abspath, "r" and "w" will have other functions.
+    # Currently, only "r"+"f", "w"+"d", and "w"+"f" have extra functionality.
+    if action == "w":
+        # Create parent directories if they don't exist.
         parents = "/".join(abspath.split("/")[:-1])
         if not os.path.isdir(parents):
             print(f"Output directory does not exist. Creating parent(s): {parents}\n", flush=True)
             os.makedirs(parents)
+    elif action == "r":
+        if path_type == "d":
+            # TODO: Add read directory functionality...
+            print("Reading directories in does not currently have a functionality", flush=True)
+            pass
+        elif path_type == "f":
+            # Exit if file to be read doesn't exist.
+            if not os.path.isfile(abspath):
+                print(f"No file found at {abspath}. Exiting.\n", flush=True)
+                sys.exit() # check if working            
+
     return abspath
 
 def fasta_to_df(file):
@@ -120,7 +129,13 @@ def read_alignment(infile, max_header=16):
     # will add 2 spaces regardless; max_header is max accession length
     alignment.set_max_header(max_header)
     for name in protein_key:
-        alignment.add_protein(pc.Protein(name, protein_key[name]))
+        prot = pc.Protein(name, protein_key[name])
+        # This removes the "QUERY_" title from BLAST queries.
+        # This means that if you BLASTed a UniProt entry with search_proteins.py
+        # then you will end up with a doubled entry in the final SVG.
+        # Only the non-queried entry should be annotated.
+        prot.set_disp_name(query="TRUE")
+        alignment.add_protein(prot)
 
     alignment.set_conserved_res() # set conserved residues for the completed alignment
     return alignment

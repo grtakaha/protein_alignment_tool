@@ -41,8 +41,8 @@ def parse_args():
     parser.add_argument("-s", "--stype", default="protein",
                         help="Sequence type (\"protein\" or \"dna\").")
     # TODO: Remove email requirement.
-    parser.add_argument("-e", "--email", help="Personal email. " +
-                        "Used to submit BLAST and Clustal Omega jobs.")
+    #parser.add_argument("-e", "--email", help="Personal email. " +
+                        #"Used to submit BLAST and Clustal Omega jobs.")
     parser.add_argument("-nr", "--num_res", default="10", help="Number of results.")
 
     return parser.parse_args()
@@ -60,11 +60,11 @@ def main(args):
 
     # TODO: Add in translation feature later maybe...or just remove dna.
 
-    infile = find_path(args.infile, action="r").replace("\\", "/")
+    infile = find_path(args.infile, "r", "f").replace("\\", "/")
     print(f"Processing sequences from {infile}\n", flush=True)
     infile_df = fasta_to_df(infile)
 
-    out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
+    out_directory = find_path(args.out_directory, "w", "d").replace("\\", "/")
     print(f"Storing outputs in {out_directory}\n", flush=True)
 
     # Check for Swiss-Prot files in installation path.
@@ -77,7 +77,7 @@ def main(args):
         sequence = infile_df.loc[protein]["Sequence"]
         accession = infile_df.loc[protein]["Accession"] # Includes ">".
 
-        prot_directory = find_path(f"{out_directory}/{protein}/", action="w")
+        prot_directory = find_path(f"{out_directory}/{protein}/", "w", "d")
         out_prefix = f"{prot_directory}/{protein}"
 
         # Saves a FASTA query file.
@@ -99,7 +99,7 @@ def main(args):
         # No header in command-line blastp outfmt6.
         for line in blast_results.split("\n")[0:-1]:
             hit = line.split("\t")[1]
-            print(f"Found BLAST hit: {hit}\n", flush=True)
+            print(f"Found BLAST hit: {hit}", flush=True)
 
             hit_name = hit.split(" ")[0].split("|")[-1]
             hit_fasta = af.get_fasta(hit_name)

@@ -39,10 +39,10 @@ def parse_args():
     parser.add_argument("-s", "--stype", default="protein",
                         help="Sequence type (\"protein\" or \"dna\").")
     # TODO: Remove email requirement.
-    parser.add_argument("-e", "--email",
-                        help="Personal email. Used to submit BLAST and Clustal Omega jobs.")
+    #parser.add_argument("-e", "--email",
+                        #help="Personal email. Used to submit BLAST and Clustal Omega jobs.")
     parser.add_argument("-t", "--title", default="alignment",
-                        help="Output title ([TITLE].clustal_num, [TITLE].pim).")
+                        help="Alignment title ([TITLE].clustal, [TITLE].pim).")
 
     return parser.parse_args()
 
@@ -57,10 +57,10 @@ def main(args):
 
     #args = parse_args()
 
-    infile = find_path(args.infile, action="r").replace("\\", "/")
+    infile = find_path(args.infile, "r", "f").replace("\\", "/")
     print(f"Processing sequences from {infile} \n", flush=True)
 
-    out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
+    out_directory = find_path(args.out_directory, "w", "d").replace("\\", "/")
     print(f"Storing outputs in {out_directory}\n", flush=True)
 
     stype = args.stype

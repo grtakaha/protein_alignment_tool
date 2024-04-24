@@ -70,7 +70,7 @@ class Protein:
         feature.set_clust_positions(clust_start, clust_end)
         self.features.append(feature)
 
-    def set_disp_name(self, length=1000, uniprot_format="FALSE"):
+    def set_disp_name(self, length=1000, uniprot_format="FALSE", query="FALSE"):
         """
         Sets a shorter display name for this protein.
 
@@ -82,10 +82,12 @@ class Protein:
                                   Ex. sp|P00784|PAPA1_CARPA -> PAPA1_CARPA
         """
 
-        if uniprot_format == "TRUE":
-            self.disp_name = self.name.split("|")[-1][:length]
+        if query == "TRUE":
+            self.disp_name = self.disp_name.replace("QUERY_", "")[:length]
+        elif uniprot_format == "TRUE":
+            self.disp_name = self.disp_name.split("|")[-1][:length]
         else:
-            self.disp_name = self.name[:length]
+            self.disp_name = self.disp_name[:length]
 
 class Alignment:
     """
