@@ -41,32 +41,32 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Figure out another way to handle queries.
-def remove_query(uniprot_df):
-    """
-    Takes in command-line arguments and returns an argparse Namespace object.
+## TODO: Figure out another way to handle queries.
+#def remove_query(uniprot_df):
+    #"""
+    #Takes in command-line arguments and returns an argparse Namespace object.
 
-        Parameters:
-            uniprot_df (pandas,DataFrame): Dataframe of input UniProt sequences.
-                                   May include a query sequence from search_proteins.py.
+        #Parameters:
+            #uniprot_df (pandas,DataFrame): Dataframe of input UniProt sequences.
+                                   #May include a query sequence from search_proteins.py.
 
-        Returns:
-            uniprot_df (pandas,DataFrame): Dataframe with no query sequence from search_proteins.py.
-    """
+        #Returns:
+            #uniprot_df (pandas,DataFrame): Dataframe with no query sequence from search_proteins.py.
+    #"""
 
-    for protein in uniprot_df.index.values:
-        acc = uniprot_df.loc[protein, "Accession"]
-        if isinstance(acc, pd.Series):
-            for i, duplicate_acc in enumerate(acc):
-                print(duplicate_acc)
-                duplicate_acc = acc[i]
-                print(duplicate_acc)
-                if "QUERY_" in duplicate_acc:
-                    uniprot_df = uniprot_df[uniprot_df["Accession"] != duplicate_acc]
-        else:
-            if "QUERY_" in acc:
-                uniprot_df = uniprot_df.drop(uniprot_df[uniprot_df["Accession"] == acc].index)
-    return uniprot_df
+    #for protein in uniprot_df.index.values:
+        #acc = uniprot_df.loc[protein, "Accession"]
+        #if isinstance(acc, pd.Series):
+            #for i, duplicate_acc in enumerate(acc):
+                #print(duplicate_acc)
+                #duplicate_acc = acc[i]
+                #print(duplicate_acc)
+                #if "QUERY_" in duplicate_acc:
+                    #uniprot_df = uniprot_df[uniprot_df["Accession"] != duplicate_acc]
+        #else:
+            #if "QUERY_" in acc:
+                #uniprot_df = uniprot_df.drop(uniprot_df[uniprot_df["Accession"] == acc].index)
+    #return uniprot_df
 
 def main(args):
     """
@@ -80,12 +80,12 @@ def main(args):
 
     #args = parse_args()
 
-    infile = find_path(args.infile, action="r").replace("\\", "/")
+    infile = find_path(args.infile, "r", "f").replace("\\", "/")
     print(f"Processing sequences from {infile}\n", flush=True)
     proteins = []
     if infile.endswith(".fasta"):
         infile_df = fasta_to_df(infile)
-        infile_df = remove_query(infile_df)
+        #infile_df = remove_query(infile_df)
         for prot in infile_df.index.values:
             if isinstance(infile_df.loc[prot, "Accession"], pd.Series):
                 # Only use the first accession that IS NOT the query
@@ -102,17 +102,17 @@ def main(args):
         print("Infile does not have a \".fasta\", \".clustal\", " +
               "or \".clustal_num\" extension.\nAssuming FASTA file.\n", flush=True)
         infile_df = fasta_to_df(infile)
-        infile_df = remove_query(infile_df)
+        #infile_df = remove_query(infile_df)
         for prot in infile_df.index.values:
             if isinstance(infile_df.loc[prot, "Accession"], pd.Series):
-                # only use the first accession that IS NOT the query
+                # Only use the first accession that IS NOT the query.
                 acc = infile_df.loc[prot, "Accession"][0][1:]
                 print(f"Duplicate accessions for ID: {prot}.\nProceeding with {acc}.\n", flush=True)
             else:
                 acc = infile_df.loc[prot, "Accession"][1:]
             proteins.append((prot, acc.split(" ")[0]))
 
-    out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
+    out_directory = find_path(args.out_directory, "w", "d").replace("\\", "/")
     print(f"Storing outputs in {out_directory}\n", flush=True)
 
     features_df_list = []
@@ -121,7 +121,11 @@ def main(args):
         whole_prot = prot_names[1]
         metadata = af.get_metadata(prot)
 
-        features = metadata.get("features")
+        if metadata is not None:
+            features = metadata.get("features")
+        else:
+            features = None
+
         if features is not None:
             features_df = pd.json_normalize(features)
         else:

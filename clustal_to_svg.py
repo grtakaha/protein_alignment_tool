@@ -521,10 +521,10 @@ def main(args):
 
     #args = parse_args()
 
-    infile = find_path(args.infile, action="r").replace("\\", "/")
+    infile = find_path(args.infile, "r", "f").replace("\\", "/")
     print(f"Processing sequences from {infile} \n", flush=True)
 
-    out_directory = find_path(args.out_directory, action="w").replace("\\", "/")
+    out_directory = find_path(args.out_directory, "w", "d").replace("\\", "/")
     print(f"Storing outputs in {out_directory}\n", flush=True)
 
     alignment = read_alignment(infile)
@@ -532,14 +532,14 @@ def main(args):
 
     annotations = args.annotations
     if annotations != "":
-        annotations = pd.read_csv(find_path(annotations, "r"), sep="\t")
+        annotations = pd.read_csv(find_path(annotations, "r", "f"), sep="\t")
         features = "TRUE"
     else:
         annotations = pd.DataFrame()
         features = "FALSE"
     alignment.add_features(annotations) # Add nothing if annotations aren't set.
 
-    create_svg(alignment, find_path(out_directory, "w"),
+    create_svg(alignment, find_path(out_directory, "w", "d"),
                codes=args.codes, nums=args.nums, features=features)
 
 if __name__ == "__main__":

@@ -108,7 +108,7 @@ def verify_sprot():
     """
 
     sprot_path = find_path(f"{os.path.abspath(os.path.dirname(__file__))}/SwissProt/",
-                           action="w")
+                           "w", "d")
     sprot_exists = True
     current_reldate = get_ftp("reldate.txt", sprot_path, action="read")
 
@@ -197,7 +197,7 @@ def blast(infile, stype, out_prefix, num_res="5"):
     """
 
     sprot_path = find_path(f"{os.path.abspath(os.path.dirname(__file__))}/SwissProt/",
-                           action="w")
+                           "w", "d")
     # Variable stype is tied to program.
     if stype == "dna":
         program = "blastx"
@@ -279,7 +279,7 @@ def align(infile, stype, out_directory, title):
     stype_conv = {"protein":"Protein", "dna":"DNA", "rna":"RNA"}
     subprocess.run(["clustalo",
                     "--infile", infile,
-                    "--outfile", f"{out_directory}/{title}.clustal_num",
+                    "--outfile", f"{out_directory}/{title}.clustal",
                     "--seqtype", stype_conv[stype],
                     "--distmat-out", f"{out_directory}/{title}.pim",
                     "--percent-id", "--full",
@@ -297,20 +297,24 @@ def get_metadata(mid):
     """
 
     # TODO: Consider returning only annotations.
-    # Returns entire json.
+    # Returns entire JSON.
     url_metadata = f"https://rest.uniprot.org/uniprotkb/{mid}"
-
+    print(f"Retrieving metadata for {mid}.", flush=True)
     # Set headers to accept JSON.
     headers = {"Accept": "application/json"}
 
-    # Rerun the request until it returns 200.
+    # For this request specfically, terminate if the first request is not 200.
+    # This is to avoid sending requests for non-UniProt accessions.
     current_request = "Metadata retrieval"
     while True:
         try:
             response_metadata = requests.get(url_metadata, headers)
             if response_metadata.status_code != 200:
                 print(f"{current_request} status code: " +
-                      f"{response_metadata.status_code}. Retrying...\n", flush=True)
+                      f"{response_metadata.status_code}.\n" +
+                      f"Failed to retrieve metadata for {mid}. Continuing...\n",
+                      flush=True)
+                return None # Handle Nonetype in script that calls this.
             else:
                 break
 
