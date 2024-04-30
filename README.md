@@ -10,22 +10,7 @@ NOTE: The descriptions in this README are not entirely accurate as of 2024.04.08
 
 ##### Continue with out-of-date README #####
 
-NOTE: The following do not have command-line support for different BLAST and Clustal Omega options. Settings can be found within the scripts for those who are curious. More information can be found in the OpenAPI menus from the following site:\
-	&emsp;&emsp;https://ebi-biows.gitdocs.ebi.ac.uk/documentation/webservices/
-
-NOTE: As per NCBI guidelines, please do not use search_proteins.py for more than 100 searches in a 24 hour period. Limits are in place in an attempt to comply with guidelines listed here:\
-	&emsp;&emsp;https://blast.ncbi.nlm.nih.gov/doc/blast-help/developerinfo.html#rest \
-Currently working on local alternative that will use the NCBI BLAST+ CLI instead.
-
-NOTE: Please follow usage guidelines found here for both search_proteins.py and alignment.py:\
-	&emsp;&emsp;https://ebi-biows.gitdocs.ebi.ac.uk/documentation/webservices/
-
-NOTE: These scripts make use of EMBL-EBI and/or NCBI resources. References for tools and databases used here include:
-
-EMBL-EBI's Job Dispatcher:\
-Madeira, Fábio, Matt Pearce, Adrian R. N. Tivey, Prasad Basutkar, Joon Lee, Ossama Edbali, Nandana Madhusoodanan, Anton Kolesnikov, and Rodrigo Lopez. \
-“Search and Sequence Analysis Tools Services from EMBL-EBI in 2022.” \
-Nucleic Acids Research 50, no. W1 (July 5, 2022): W276–79. https://doi.org/10.1093/nar/gkac240.
+NOTE: These scripts make use of EMBL-EBI and NCBI resources. References for tools and databases used here include:
 
 UniProt:\
 The UniProt Consortium. \
@@ -53,15 +38,31 @@ BMC Bioinformatics 10, no. 1 (December 2009): 1–9. https://doi.org/10.1186/147
 
 https://blast.ncbi.nlm.nih.gov/doc/blast-help/references.html#references
 
-# REQUIREMENTS
-General:\
-	&emsp;&emsp;Internet connection (when running search_proteins.py, retrieve_annotations.py, and/or alignment.py)\
-	&emsp;&emsp;Python 3.7+
+### Prerequisites
+General:
+* Internet connection (when running search_proteins.py and retrieve_annotations.py)
+* Python 3.7+
+* ~ 1 GB of storage for Swiss-Prot BLAST database (if running search_proteins.py)
 
-Python Libraries:\
-	&emsp;&emsp;pandas\
-	&emsp;&emsp;requests
+Command-line tools:
+* Clustal Omega (http://www.clustal.org/omega/)
+* NCBI BLAST+ (https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/)
 
+Python Libraries:
+* pandas
+* requests
+
+### Installing
+Before running, ensure that required command-line tools are on your PATH.
+* Clustal Omega is required for alignment.py
+* NCBI BLAST+ is required for search_proteins.py
+
+Download protein_alignment tool.
+```
+git clone https://github.com/grtakaha/protein_alignment_tool.git
+```
+
+Add its location to PATH.
 
 # search_proteins.py
 
