@@ -54,9 +54,9 @@ BMC Bioinformatics 10, no. 1 (December 2009): 1–9. https://doi.org/10.1186/147
 https://blast.ncbi.nlm.nih.gov/doc/blast-help/references.html#references
 
 # REQUIREMENTS
-General:\
-	&emsp;&emsp;Internet connection (when running search_proteins.py, retrieve_annotations.py, and/or alignment.py)\
-	&emsp;&emsp;Python 3.7+
+General:
+	Internet connection (when running search_proteins.py, retrieve_annotations.py, and/or alignment.py)\
+	Python 3.7+
 
 Python Libraries:\
 	&emsp;&emsp;pandas\
