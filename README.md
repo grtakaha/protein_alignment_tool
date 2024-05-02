@@ -57,12 +57,7 @@ Before running, ensure that required command-line tools are on your PATH.
 * Clustal Omega is required for alignment.py
 * NCBI BLAST+ is required for search_proteins.py
 
-Download protein_alignment tool.
-```
-git clone https://github.com/grtakaha/protein_alignment_tool.git
-```
-
-Add its location to PATH.
+Download protein_alignment_tool and add it to PATH.
 
 # search_proteins.py
 
