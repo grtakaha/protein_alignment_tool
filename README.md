@@ -57,44 +57,61 @@ Before running, ensure that required command-line tools are on your PATH.
 * Clustal Omega is required for alignment.py
 * NCBI BLAST+ is required for search_proteins.py
 
-Download protein_alignment_tool and add it to PATH.
+Download and add the protein_alignment_tool directory to PATH and PYTHONPATH.
 
 # search_proteins.py
 
-Takes one or more protein sequences (FASTA format) as input and BLASTs them against UniProt databases (uniprotkb_refprotswissprot).
+Takes one or more protein sequences (FASTA format) as input and BLASTs them against the current SwissProt release (uniprotkb_refprotswissprot).\
 
-NOTE: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
+Requires ~1 GB of storage for SwissProt download and creation of BLAST database.
 
-INPUT: FASTA-formatted file with at least one sequence
+**SwissProt download information**:
+Current SwissProt release is verified/downloaded from:
+* ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/\
+SwissProt database and associated files are stored in the same directory as this script.
 
-OUTPUT: A set of directories - one for each sequence in the original input file - that contain the following:\
-	&emsp;&emsp;the BLAST results for that sequence (the query) against UniProt databases in both table ([QUERY].tsv) and readable form ([QUERY].out)\
-	&emsp;&emsp;individual FASTA files with UniProt sequences for each BLAST hit\
-	&emsp;&emsp;one FASTA file containing all protein sequences, including the query sequence (all.fasta)
+**NOTE**: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
 
-If used in a "multi" run, downstream commands will be run on each resulting collection of outputs.
+**INPUT**: FASTA-formatted file with at least one sequence.
 
-For example: blast.py will yield multiple all.fasta (one for each query), which can be sent to both retrieve_annotations.py and alignment.py. This is why "blast annotate align" is a valid input for the --order optional argument.
+**OUTPUT**: A set of directories - one for each sequence in the original input file - that contain the following:
+* the BLAST results for that sequence (the query) against the current SwissProt release in table form ([QUERY].tsv)
+* individual FASTA files with UniProt sequences for each BLAST hit
+* one FASTA file containing all protein sequences, including the query sequence (all.fasta)
 
-Example usage from main_tool.py:\
-  &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] blast [-h] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
+If used at the beginning of a multi-step run, downstream commands will be run on each resulting collection of outputs.
 
-Example usage:\
-  &ensp;python blast.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-e EMAIL] [-nr NUM_RES]
+For example: search_proteins.py will yield multiple all.fasta (one for each query), which can be sent to both retrieve_annotations.py and alignment.py. This is why "blast annotate align" is a valid input for the --order optional argument.
 
-optional arguments:\
-  &ensp;-h, --help&emsp;&emsp;&emsp;show this help message and exit\
-  &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
-  &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
-  &ensp;-s STYPE, --stype STYPE\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
-  &ensp;-e EMAIL, --email EMAIL\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
-  &ensp;-nr NUM_RES, --num_res NUM_RES\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.
+**Example from pat_main.py**:
+```
+  python -m pat_main -i ./unknown_proteins.fasta -o ./unknown_protein_folder/ -ord blast align -s protein -nr 3
+```
 
+**Example standalone**:
+```
+  python -m search_proteins -i ./unknown_proteins.fasta -o ./ -s protein -nr 5
+```
+
+**Usage**:
+```
+usage: UniProt BLAST script [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE]
+                            [-nr NUM_RES]
+
+BLASTs FASTA sequences against current SwissProt release.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INFILE, --infile INFILE
+                        Full path of input file.
+  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
+                        Full path of output directory.
+  -s STYPE, --stype STYPE
+                        Sequence type ("protein" is currently the only
+                        option).
+  -nr NUM_RES, --num_res NUM_RES
+                        Number of results.
+```
 
 # retrieve_annotations.py
 
