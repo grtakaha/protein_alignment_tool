@@ -61,12 +61,12 @@ Download and add the protein_alignment_tool directory to PATH and PYTHONPATH.
 
 # search_proteins.py
 
-Takes one or more protein sequences (FASTA format) as input and BLASTs them against the current SwissProt release (uniprotkb_refprotswissprot).\
+Takes one or more protein sequences (FASTA format) as input and BLASTs them against the current Swiss-Prot release (uniprotkb_refprotswissprot).\
 
-Requires ~1 GB of storage for SwissProt download and creation of BLAST database.
+Requires ~1 GB of storage for Swiss-Prot download and creation of BLAST database.
 
 **SwissProt download information**:
-Current SwissProt release is verified/downloaded from:
+Current Swiss-Prot release is verified/downloaded from:
 * ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/\
 SwissProt database and associated files are stored in the same directory as this script.
 
@@ -98,7 +98,7 @@ For example: search_proteins.py will yield multiple all.fasta (one for each quer
 usage: UniProt BLAST script [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE]
                             [-nr NUM_RES]
 
-BLASTs FASTA sequences against current SwissProt release.
+BLASTs FASTA sequences against current Swiss-Prot release.
 
 optional arguments:
   -h, --help            show this help message and exit
