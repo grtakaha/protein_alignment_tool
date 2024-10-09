@@ -65,17 +65,18 @@ Takes one or more protein sequences (FASTA format) as input and BLASTs them agai
 
 Requires ~1 GB of storage for Swiss-Prot download and creation of BLAST database.
 
-**SwissProt download information**:
+**Swiss-Prot download information**:
 Current Swiss-Prot release is verified/downloaded from:
-* ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/\
-SwissProt database and associated files are stored in the same directory as this script.
+* ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/
+
+Swiss-Prot database and associated files are stored in the same directory as this script.
 
 **NOTE**: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
 
 **INPUT**: FASTA-formatted file with at least one sequence.
 
 **OUTPUT**: A set of directories - one for each sequence in the original input file - that contain the following:
-* the BLAST results for that sequence (the query) against the current SwissProt release in table form ([QUERY].tsv)
+* the BLAST results for that sequence (the query) against the current Swiss-Prot release in table form ([QUERY].tsv)
 * individual FASTA files with UniProt sequences for each BLAST hit
 * one FASTA file containing all protein sequences, including the query sequence (all.fasta)
 
