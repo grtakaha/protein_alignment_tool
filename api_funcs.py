@@ -211,6 +211,7 @@ def blast(infile, stype, out_prefix, num_res="5"):
         stype = "protein"
         program = "blastp"
 
+    # TODO: Consider adding back readable output.
     subprocess.run([program,
                     "-db", f"{sprot_path}/uniprot_sprot.fasta",
                     "-query", infile,

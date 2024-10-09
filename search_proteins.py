@@ -1,11 +1,20 @@
 """
-BLASTs FASTA sequences against UniProt databases.
+Downloads current SwissProt release.
+BLASTs FASTA sequences against current SwissProt release.
+Saves BLAST results (see main() docstring for more info).
+
+Required installations:
+    BLAST+ CLI (tested on BLAST 2.12.0+)
+        https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/
 
 Extra imports:
     api_funcs
         https://github.com/grtakaha/protein_alignment_tool/blob/main/api_funcs.py
     helpers
         https://github.com/grtakaha/protein_alignment_tool/blob/main/helpers.py
+
+Other requirements:
+    ~1 GB of storage for SwissProt download and creation of BLAST database
 
 Functions:
     parse_args() -> Namespace
@@ -15,7 +24,6 @@ Command-Line Arguments:
     --infile
     --out_directory
     --stype
-    --email
     --num_res
 """
 
@@ -32,17 +40,13 @@ def parse_args():
     """
 
     parser = argparse.ArgumentParser(prog="UniProt BLAST script",
-                                     description="BLASTs FASTA sequences against UniProt databases")
+                                     description="BLASTs FASTA sequences against current SwissProt release.")
 
     parser.add_argument("-i", "--infile", help="Full path of input file.")
-    # TODO: Fix_outdirectory so that "/" isn't necessary at the end.
     parser.add_argument("-o", "--out_directory", default="./",
-                        help="Full path of output directory. Must end with \"/\".")
+                        help="Full path of output directory.")
     parser.add_argument("-s", "--stype", default="protein",
-                        help="Sequence type (\"protein\" or \"dna\").")
-    # TODO: Remove email requirement.
-    #parser.add_argument("-e", "--email", help="Personal email. " +
-                        #"Used to submit BLAST and Clustal Omega jobs.")
+                        help="Sequence type (\"protein\" is currently the only option).")
     parser.add_argument("-nr", "--num_res", default="10", help="Number of results.")
 
     return parser.parse_args()
