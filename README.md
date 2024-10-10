@@ -59,6 +59,70 @@ Before running, ensure that required command-line tools are on your PATH.
 
 Download and add the protein_alignment_tool directory to PATH and PYTHONPATH.
 
+# main.py
+
+Runs one or more of the below scripts in the order given.
+
+**INPUT**: Depends on which tool(s) are being executed. Should be an acceptable input of the first tool executed. Inputs for runs that start with annotate.py may additionally be limited by what can be passed to downstream tools.  Example: --order annotate svg -> must use .clustal or .clustal_num file as input (.fasta file cannot be used by clustal_to_svg.py)
+
+**OUTPUT**: Depends on which tool(s) are being executed. Each tool will have its own output if it is included in a run. All outputs will be split into separate directories in a run that includes search_proteins.py.
+
+**NOTE**: There are currently limited ways to run multiple tools at once (inputs and outputs will vary depending on start and end):
+* blast annotate align svg
+* blast annotate align
+* blast annotate
+* blast align annotate svg
+* blast align annotate
+* blast align svg
+* blast align
+* blast
+* annotate align svg
+* annotate align
+* annotate svg
+* annotate
+* align annotate svg
+* align annotate
+* align svg
+* align
+* svg
+
+**Example**: python -m pat_main -i ./alignment.clustal -o ./svg_folder/ -ord annotate svg -u TRUE -c FALSE -nums TRUE
+
+```
+usage: pat_main.py [-h] [-i INFILE] [-o OUT_DIRECTORY]
+                   [-ord ORDER [ORDER ...]] [-s STYPE] [-nr NUM_RES]
+                   [-t TITLE] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
+                   [-a ANNOTATIONS]
+
+Protein Alignment Tool Manager
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INFILE, --infile INFILE
+                        Full path of input file
+  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
+                        Full path of output directory. Must end with "/".
+  -ord ORDER [ORDER ...], --order ORDER [ORDER ...]
+                        Order of tools to run (blast, annotate, align,
+                        svg).Ex. --order align svg
+  -s STYPE, --stype STYPE
+                        Sequence type ("protein" or "dna").
+  -nr NUM_RES, --num_res NUM_RES
+                        Number of results.
+  -t TITLE, --title TITLE
+                        Alignment title ([TITLE].clustal, [TITLE].pim).
+  -c CODES, --codes CODES
+  -n NUMS, --nums NUMS  When set to TRUE, includes total residue numbers at
+                        the end of each line.
+  -u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT
+                        When set to TRUE, truncates all accessions as if they
+                        were UniProt entries. Ex. sp|P00784|PAPA1_CARPA ->
+                        PAPA1_CARPA
+  -a ANNOTATIONS, --annotations ANNOTATIONS
+                        If an annotation file is provided, it will be used to
+                        annotate the resulting SVG files.
+```
+
 # search_proteins.py
 
 Takes one or more protein sequences (FASTA format) as input and BLASTs them against the current Swiss-Prot release (uniprotkb_refprotswissprot).\
