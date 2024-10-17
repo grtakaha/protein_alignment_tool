@@ -59,7 +59,7 @@ Before running, ensure that required command-line tools are on your PATH.
 
 Download and add the protein_alignment_tool directory to PATH and PYTHONPATH.
 
-# main.py
+# pat_main.py
 
 Runs one or more of the below scripts in the order given.
 
@@ -135,14 +135,14 @@ Current Swiss-Prot release is verified/downloaded from:
 
 Swiss-Prot database and associated files are stored in the same directory as this script.
 
-**NOTE**: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
-
 **INPUT**: FASTA-formatted file with at least one sequence.
 
 **OUTPUT**: A set of directories - one for each sequence in the original input file - that contain the following:
 * the BLAST results for that sequence (the query) against the current Swiss-Prot release in table form ([QUERY].tsv)
 * individual FASTA files with UniProt sequences for each BLAST hit
 * one FASTA file containing all protein sequences, including the query sequence (all.fasta)
+
+**NOTE**: --stype dna is currently not supported in any form. May enter an infinite loop. Please do not use --stype dna until updated.
 
 If used at the beginning of a multi-step run, downstream commands will be run on each resulting collection of outputs.
 
@@ -180,31 +180,37 @@ optional arguments:
 
 # retrieve_annotations.py
 
-Takes one or more UniProt protein sequences (FASTA format) as input and retrieves annotations for those sequences. 
+Takes one or more protein sequences (FASTA format) as input and retrieves annotations for sequences whos IDs exist in UniProt. 
 
-NOTE: Please only use UniProt sequences here until this feature is updated. May run infinitely if it cannot find a given entry.
+**INPUT**: A FASTA-formatted, CLUSTAL_NUM-formatted, or CLUSTAL-formatted file with at least one protein sequence.
 
-INPUT: A FASTA-formatted, CLUSTAL_NUM-formatted, or CLUSTAL-formatted file with at least one protein sequence. ALL protein sequences must be from UniProt (specifically, they must have a UniProt accession at the beginning of their names). At least three sequences are necessary if used in a multi run that includes alignment.py (align).
+**OUTPUT**: A collection of files that includes the following:
+* individual annotation files (.ann), one for each unique sequence in the input file
+* one combined annotation file that includes all annotations for this collection of sequences (all.ann)
 
-OUTPUT: A collection of files that includes the following:\
-	&emsp;&emsp;individual annotation files (.ann), one for each unique sequence in the input file\
-	&emsp;&emsp;one combined annotation file that includes all annotations for this collection of sequences (all.ann)
+**NOTE**: all.ann can be used as input for clustal_to_svg.py. See **ANNOTATION FORMAT** for help formatting annotations by hand.
 
-NOTE: all.ann can be used as input for clustal_to_svg.py. See **ANNOTATION FORMAT** for help formatting annotations by hand.
+**Example from pat_main.py**:
+```
+python -m pat_main -i ./uniprot_proteins.fasta -o ./annotations_folder/ -ord annotate align svg -s protein -u TRUE -c FALSE -n FALSE
+```
 
-Example usage from main_tool.py:\
-  &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] annotate [-h]
+**Example standalone**:
+```
+python -m retrieve_annotations -i ./uniprot_proteins.fasta -o ./annotations_folder/
+```
 
-Example usage:\
-  &ensp;python retrieve_annotations.py [-h] [-i INFILE] [-o OUT_DIRECTORY]
+**Usage**:
+```
+usage: retrieve_annotations.py [-h] [-i INFILE] [-o OUT_DIRECTORY]
 
-optional arguments:\
-  &ensp;-h, --help &emsp;&emsp;&emsp;show this help message and exit\
-  &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
-  &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".
-
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INFILE, --infile INFILE
+                        Full path of input file.
+  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
+                        Full path of output directory.
+```
 
 # alignment.py
 

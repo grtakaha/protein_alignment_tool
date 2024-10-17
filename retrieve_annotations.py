@@ -37,7 +37,7 @@ def parse_args():
     # One or more sequences in FASTA format
     parser.add_argument("-i", "--infile", help="Full path of input file.")
     parser.add_argument("-o", "--out_directory", default="./",
-                        help="Full path of output directory. Must end with \"/\".")
+                        help="Full path of output directory.")
 
     return parser.parse_args()
 
