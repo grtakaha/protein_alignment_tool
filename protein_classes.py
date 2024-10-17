@@ -205,7 +205,9 @@ class Alignment:
                 end = int(end)
 
             feature = Feature(feature_type, start, end, row.description)
-            self.proteins[row.whole_prot].add_feature(feature)
+            prot = self.proteins.get(row.whole_prot)
+            if prot:
+                prot.add_feature(feature)
 
         # TODO: Consider adding a function that returns feature coordinates here.
 

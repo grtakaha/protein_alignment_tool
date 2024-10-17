@@ -49,7 +49,7 @@ def parse_args():
 
     parser.add_argument("-i", "--infile", type=str, help="Full path of input file")
     parser.add_argument("-o", "--out_directory", type=str,
-                        help="Full path of output directory. Must end with \"/\".")
+                        help="Full path of output directory.")
 
     ## must be after -i and -o (positional)
     #subparsers = parser.add_subparsers(dest='tool_name', help='Tool to execute')

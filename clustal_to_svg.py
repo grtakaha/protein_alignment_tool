@@ -493,7 +493,7 @@ def parse_args():
 
     parser.add_argument("-i", "--infile")
     parser.add_argument("-o", "--out_directory", default="./",
-                        help="Full path of output directory. Must end with \"/\".")
+                        help="Full path of output directory.")
     parser.add_argument("-c", "--codes", default="FALSE",
                         help="When set to TRUE, includes Clustal identity " +
                         "codes at the bottom of each block.")
