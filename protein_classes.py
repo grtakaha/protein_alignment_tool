@@ -48,10 +48,16 @@ class Protein:
         clust_start = None # 1-indexed
         clust_end = None # 1-indexed
 
-        raw_count = 1
-        clust_count = 1
+        raw_count = 0
+        clust_count = 0
         # Note: will run through whole sequence if feature.start == feature.end.
         for position in self.sequence:
+            clust_count += 1
+            # Test this first; cannot end on a "-"
+            if position == "-":
+                continue
+            else:
+                raw_count += 1                
             if raw_count == feature.start:
                 clust_start = clust_count
                 if feature.start == feature.end:
@@ -60,9 +66,6 @@ class Protein:
             elif raw_count == feature.end:
                 clust_end = clust_count
                 break # End the loop once it finds the end of the feature.
-            clust_count += 1
-            if position != "-":
-                raw_count += 1
 
         # clust_start and clust_end are 1-indexed.
         if feature.start and feature.end: 
@@ -205,9 +208,10 @@ class Alignment:
                 end = int(end)
 
             feature = Feature(feature_type, start, end, row.description)
-            prot = self.proteins.get(row.whole_prot)
-            if prot:
-                prot.add_feature(feature)
+
+            prot_temp = self.proteins.get(row.whole_prot)
+            if prot_temp:
+                self.proteins[row.whole_prot].add_feature(feature)
 
         # TODO: Consider adding a function that returns feature coordinates here.
 
