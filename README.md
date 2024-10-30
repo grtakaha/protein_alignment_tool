@@ -325,6 +325,7 @@ Default behavior is identical to including the following option in a run that ca
 ```
 
 **Format**:
+
 Annotation files that include the following columns and VALUES (tab-delimited) can be used as inputs for clustal_to_svg.py:
 
 		prot	whole_prot	type	location.start.value	location.end.value
