@@ -1,4 +1,6 @@
-### Protein Alignment Tool: A centralized tool manager for a collection of scripts used to process and visualize protein sequences.
+# Protein Alignment Tool
+
+A centralized tool manager for four scripts used to process and visualize protein sequences.
 
 **NOTE**: These scripts make use of EMBL-EBI and NCBI resources. References for tools and databases used here include:
 
@@ -49,7 +51,7 @@ Before running, ensure that required command-line tools are on your PATH.
 
 Download and add the protein_alignment_tool directory to PATH and PYTHONPATH.
 
-# pat_main.py
+## pat_main.py
 
 Runs one or more of the below scripts in the order given.
 
