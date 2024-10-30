@@ -51,7 +51,9 @@ Before running, ensure that required command-line tools are on your PATH.
 
 Download and add the protein_alignment_tool directory to PATH and PYTHONPATH.
 
-## pat_main.py
+## SCRIPTS
+
+### pat_main.py
 
 Runs one or more of the below scripts in the order given.
 
@@ -124,7 +126,7 @@ optional arguments:
                         bond:#e27441,Propeptide:#9e00f2,Signal:#2b7441"
 ```
 
-# search_proteins.py
+### search_proteins.py
 
 Takes one or more protein sequences (FASTA format) as input and BLASTs them against the current Swiss-Prot release (uniprotkb_refprotswissprot).\
 
@@ -179,7 +181,7 @@ optional arguments:
                         Number of results.
 ```
 
-# retrieve_annotations.py
+### retrieve_annotations.py
 
 Takes one or more protein sequences (FASTA format) as input and retrieves annotations for sequences whos IDs exist in UniProt. 
 
@@ -213,7 +215,7 @@ optional arguments:
                         Full path of output directory.
 ```
 
-# alignment.py
+### alignment.py
 
 Takes at least two protein sequences as input and aligns them using Clustal Omega.
 
@@ -249,7 +251,7 @@ optional arguments:
                         Alignment title ([TITLE].clustal, [TITLE].pim).
 ```
 
-# clustal_to_svg.py
+### clustal_to_svg.py
 
 Reformats a .clustal_num or .clustal alignment into an editable Inkscape SVG. Currently annotates conserved residues (automatic, not optional) and a given list of features (optional).
 
@@ -302,7 +304,7 @@ optional arguments:
                         bond:#e27441,Propeptide:#9e00f2,Signal:#2b7441"
 ```
 
-# ANNOTATION FORMAT
+## ANNOTATION FORMAT
 
 Annotations can be added to an SVG with the -a or --annotations option in a run that calls clustal_to_svg.py.
 
