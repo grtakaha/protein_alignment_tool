@@ -89,15 +89,24 @@ def parse_args():
     parser.add_argument("-c", "--codes", default="FALSE")
     parser.add_argument("-n", "--nums", default="FALSE",
                         help="When set to TRUE, includes total residue numbers " +
-                        "at the end of each line."                        )
+                        "at the end of each line.")
     parser.add_argument("-u", "--uniprot_format", default="TRUE",
                         help="When set to TRUE, truncates all accessions as if " +
                         "they were UniProt entries.\n" +
-                        "Ex. sp|P00784|PAPA1_CARPA -> PAPA1_CARPA"                        )
+                        "Ex. sp|P00784|PAPA1_CARPA -> PAPA1_CARPA")
     # Will annotate if this is provided at all; cannot be nonetype.
     parser.add_argument("-a", "--annotations", default="",
                         help="If an annotation file is provided, it will be " +
-                        "used to annotate the resulting SVG files."                        )
+                        "used to annotate the resulting SVG files.")
+    parser.add_argument("-f", "--features",
+                        default="Active site,Disulfide bond,Propeptide,Signal",
+                        help="A comma-separated list of feature:color pairs to include in SVGs." +
+                        "Case sensitive. " +
+                        "If features include spaces, the list must be enclosed in quotes." +
+                        "If no features should be included, use: -f None" +
+                        "The following example is default behavior. " +
+                        "Ex. -f \"Active site:#0000ff,Disulfide bond:#e27441," +
+                        "Propeptide:#9e00f2,Signal:#2b7441\"")
 
     return parser.parse_args()
 
@@ -150,6 +159,7 @@ def execute_tool(args):
         #print("here align", args.infile)
 
     elif tool_name == "svg":
+        print(f"features: {args.features}")
         cts.main(args)
 
     elif tool_name == "multi":
@@ -159,10 +169,8 @@ def execute_tool(args):
         full_order = args.order
         for i, tool in enumerate(full_order):
             print(f"In multi run, executing {tool}...\n", flush=True)
-            #print("here1", args.order)
             # This should be ok to run sequentially since args.order is set.
             args.order = [tool] # Run again with just one tool.
-            #print("here1.5", args.order)
             execute_tool(args)
             # Will only continue if there is something after blast
             if tool == "blast" and i+1 < len(full_order):
@@ -280,6 +288,7 @@ def find_outputs(args):
         new_inputs.append(f"{args.out_directory}/{args.title}.clustal".replace("//", "/"))
     elif tool_name == "svg":
         pass # Not necessary to return anything because svg is the end of the line.
+    print(new_inputs)
     return new_inputs
 
 def main(args):

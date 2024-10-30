@@ -310,7 +310,7 @@ def add_conservation(res, center_x, center_y):
 
     return circle
 
-def create_feature(feature, left_x, top_y):
+def create_feature(feature, left_x, top_y, feature_colors):
     """
     Creates a transparent rectangle to annotate the given feature.
 
@@ -319,21 +319,22 @@ def create_feature(feature, left_x, top_y):
                                                Not implemented.
             left_x (int): x-coordinate for the left side of an Inkscape rectangle.
             top_y (int): y-coordinate for the top of an Inkscape rectangle.
+            feature_colors (dict): Dictionary of feature colors in hex codes.
 
         Returns:
             rect (str): Rectangle line to be added to the final SVG.
     """
-    
-    feature_colors = {"Active site":"0000ff",
-                      "Disulfide bond":"e27441",
-                      "Propeptide":"9e00f2",
-                      "Signal":"2b7441"}
+    #if feature_colors == None:
+        #feature_colors = {"Active site":"#0000ff",
+                          #"Disulfide bond":"#e27441",
+                          #"Propeptide":"#9e00f2",
+                          #"Signal":"#2b7441"}
     # TODO: Add in functionality for other features.
     # Create the following for a transparent rectangle.
     # Add it to the svg based on x and y of characters.
     #rectangle = f"<rect x=\"{left_x}\" y=\"{top_y}\" width=\"5.5px\" height=\"11px\" "
     rectangle = f"<rect x=\"{left_x}pt\" y=\"{top_y}pt\" width=\"4.125pt\" height=\"8.250pt\" "
-    rectangle += f"style=\"fill:#{feature_colors[feature.feature_type]};stroke-width:0;fill-opacity:.2\" />"
+    rectangle += f"style=\"fill:{feature_colors[feature.feature_type]};stroke-width:0;fill-opacity:.2\" />"
 
     return rectangle
 
@@ -401,7 +402,7 @@ def split_lines(lines, lines_per_block, lines_per_svg=72):
 
 # TODO: Fix bug with identical display names - ID#s will add for both.
 # TODO: Add numbers to "-" and " " so that they have real IDs.
-def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="TRUE"):
+def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features=None):
     """
     Creates reformatted alignment Inkscape SVGs from a given Clustal alignment.
 
@@ -434,7 +435,7 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
     feature_coords = get_feature_coords(alignment, nums=nums)
     conserved_coords = get_conserved_coords(alignment, nums=nums)
 
-    relevant_features = ["Active site", "Disulfide bond", "Propeptide", "Signal"] # TODO: Add more valid features.
+    #relevant_features = ["Active site", "Disulfide bond", "Propeptide", "Signal"] # TODO: Add more valid features.
 
     aa_counts = {} # Use display names and keep track of aa#.
     pos_counts = {} # Use display names and keep track of overall position counts.
@@ -471,15 +472,15 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
         # Putting features in first puts them behind the text. Decide later if I like this.
         # Add in features (transparent rectangles).
         unique_features = {}
-        if features == "TRUE" and feature_coords.get(i):
+        if features and feature_coords.get(i):
             for f_info in feature_coords[i]:
                 feature = f_info[0]
                 disp_name = f_info[3]
                 unique_feature_id = f"{disp_name}:{feature.feature_type}:{feature.sequence}"
-                if feature.feature_type in relevant_features:
+                if feature.feature_type in features:
                     if not unique_features.get(unique_feature_id):
                         if feature.feature_type == "Disulfide bond":
-                            # Fix this later so that Disulfide bonds are represented by only pairs of cysteines.
+                            # TODO: Fix this later so that Disulfide bonds are represented by only pairs of cysteines.
                             print(f"{feature.feature_type} found for " +
                                   f"{f_info[3]}, residue {feature.start}{feature.sequence}, " +
                                   f"alignment position {feature.clust_start}. " +
@@ -490,7 +491,7 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
                                   f"alignment position {feature.clust_start}. " +
                                   f"Adding to {i}.svg.", flush=True)
                         unique_features[unique_feature_id] = 1
-                    svg += create_feature(f_info[0], f_info[1], f_info[2]) # feature, x, y
+                    svg += create_feature(f_info[0], f_info[1], f_info[2], features) # feature, x, y
         
         svg += "  <g inkscape:label=\"Layer 1\" inkscape:groupmode=\"layer\" id=\"layer1\">\n"
         svg += "    <rect "
@@ -584,126 +585,6 @@ def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="
             print(f"Writing part {i} to {out}.\n", flush=True)
             out_svg.write(svg)
 
-    # TODO: Add non-active site features.
-
-## TODO: Fix bug with identical display names - ID#s will add for both.
-## TODO: Add numbers to "-" and " " so that they have real IDs.
-#def create_svg(alignment, out_directory, codes="FALSE", nums="FALSE", features="TRUE"):
-    #"""
-    #Creates reformatted alignment Inkscape SVGs from a given Clustal alignment.
-
-        #Parameters:
-            #alignment (protein_classes.Alignment): Alignment object with features.
-            #out_directory (str): Directory for storage of reformatted alignments.
-            #codes (str): If "TRUE", includes Clustal identity codes at the bottom of each block.
-            #nums (str): If "TRUE", includes total residue numbers at the end of each line.
-            #features (str): If "TRUE", includes feature annotations.
-
-        #Outputs:
-            #A series of Inkscape SVGs with Martin Lab-formatted alignments.
-            #SVGs are named 0.svg, 1.svg, etc.
-    #"""
-
-    ## Adjust as needed; good enough for now.
-    #line_height = 1.25
-    ## In px; I have no idea why this doesn't work with the rectangle y...figure out later
-    #x_start, y_start = 9.317, 28.5
-
-    ## Format lines
-    #text = format_alignment(alignment, codes=codes, nums=nums) # Returns list of lines.
-
-    #lines_per_block = len(alignment.proteins) + 2
-    #svgs = split_lines(text, lines_per_block) # List of svgs with up to 72 lines each.
-
-    #max_header = get_max_header(alignment, nums=nums)
-    #feature_coords = get_feature_coords(alignment, nums=nums)
-    #conserved_coords = get_conserved_coords(alignment, nums=nums)
-
-    #relevant_features = ["Active site"] # TODO: Add more valid features.
-
-    #aa_counts = {} # Use display names and keep track of aa#.
-    #line_counts = {} # Use display names and keep track of line#.
-
-    #aa_list = ["R", "H", "K", "D", "E", "S", "T",
-               #"N", "Q", "C", "G", "P", "A", "V",
-               #"I", "L", "M", "F", "Y", "W"]
-
-    #for i, lines in enumerate(svgs):
-
-        ## Inkscape SVG things.
-        #svg = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n"
-        #svg += "<svg baseProfile=\"full\" "
-        #svg += "height=\"9in\" version=\"1.1\" width=\"7.5in\" "
-        #svg += "xmlns=\"http://www.w3.org/2000/svg\" "
-        #svg += "xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\" "
-        #svg += "xmlns:ev=\"http://www.w3.org/2001/xml-events\" "
-        #svg += "xmlns:xlink=\"http://www.w3.org/1999/xlink\"><defs />"
-        #svg += f"<text style=\"fill:#000000;line-height:{line_height};"
-        #svg += "font-family:Courier New;font-size:9.2px;font-weight:bold\" "
-        #svg += f"xml:space=\"preserve\" x=\"{x_start}\" y=\"{y_start}\">"
-
-        ## TODO: Consider removing need to re-split.
-        #prot_num = 0 # Protein number in list(alignment.proteins)
-        #prot_names = list(alignment.proteins) # Keys. Full protein names.
-        #for line in lines:
-            ## Important to add this back in, or they will not act like lines.
-            #line += "\n"
-            #if line == "\n":
-                ## Add a space if empty so user has something to "see".
-                #header = " "
-                #current_prot = "line"
-            #else:
-                ## Protein name and spaces.
-                #header = line[:max_header+2]
-                ##current_prot = header.split(" ")[0]
-                #current_prot = prot_names[prot_num % len(prot_names)]
-                #if current_prot not in aa_counts:
-                    ## Start at 0 and increment when valid AA is found.
-                    #aa_counts[current_prot] = 0
-                #prot_num += 1 # Increase number once a protein is found.
-
-            #if current_prot not in line_counts:
-                #line_counts[current_prot] = 0
-            #line_counts[current_prot] += 1
-
-            #svg += f"<tspan id=\"{current_prot}{line_counts[current_prot]}\" "
-            #svg += f"sodipodi:role=\"line\"><tspan>{header}</tspan>"
-            #for residue in line[max_header+2:]:
-                #if residue in aa_list:
-                    #aa_counts[current_prot] += 1
-                    #res_id = f"{current_prot}:{residue}{aa_counts[current_prot]}"
-                #else:
-                    #res_id = f"{residue}"
-                #svg += create_tspan(residue, res_id)
-            #svg += "</tspan>"
-        #svg += "</text>"
-
-        ## Add in features (transparent rectangles).
-        #if features == "TRUE" and feature_coords.get(i):
-            #for f_info in feature_coords[i]:
-                #feature = f_info[0]
-                #if feature.feature_type in relevant_features:
-                    #print(f"{feature.feature_type} found for " +
-                          #f"{f_info[3]}, residue {feature.start}{feature.sequence}, " +
-                          #f"alignment position {feature.clust_start}. " +
-                          #f"Adding to {i}.svg.", flush=True)
-                    #svg += create_feature(f_info[0], f_info[1], f_info[2]) # feature, x, y
-
-        ## Add in conserved residues (circles).
-        #if conserved_coords.get(i):
-            #for cons_info in conserved_coords[i]:
-                ## residue, center_x, center_y
-                #svg += add_conservation(cons_info[0], cons_info[1], cons_info[2])
-
-        #svg += "</svg>"
-
-        #out = f"{out_directory}{i}.svg".replace("\\", "/")
-        #with open(out, "w", encoding="utf-8") as out_svg:
-            #print(f"Writing part {i} to {out}.\n", flush=True)
-            #out_svg.write(svg)
-
-    ## TODO: Add non-active site features.
-
 def parse_args():
     """
     Takes in command-line arguments and returns an argparse Namespace object.
@@ -730,6 +611,14 @@ def parse_args():
     parser.add_argument("-a", "--annotations", default="",
                         help="If an annotation file is provided, it will be " +
                         "used to annotate the resulting SVG files.")
+    parser.add_argument("-f", "--features",
+                        default="Active site,Disulfide bond,Propeptide,Signal",
+                        help="A comma-separated list of feature:color pairs to include in SVGs." +
+                        "\nCase sensitive.\n" +
+                        "If features include spaces, the list must be enclosed in quotes.\n" +
+                        "If no features should be included, use: -f None\n" +
+                        "The following example is default behavior.\n" +
+                        "Ex. -f \"Active site:#0000ff,Disulfide bond:#e27441,Propeptide:#9e00f2,Signal:#2b7441\"")
 
     return parser.parse_args()
 
@@ -741,8 +630,6 @@ def main(args):
             A series of Inkscape SVGs with Martin Lab-formatted alignments.
             SVGs are named 0.svg, 1.svg, etc.
     """
-
-    #args = parse_args()
 
     infile = find_path(args.infile, "r", "f").replace("\\", "/")
     print(f"Processing sequences from {infile} \n", flush=True)
@@ -761,6 +648,15 @@ def main(args):
         annotations = pd.DataFrame()
         features = "FALSE"
     alignment.add_features(annotations) # Add nothing if annotations aren't set.
+
+    if args.features != "None":
+        feature_pairs = args.features.split(",")
+        features = {}
+        for pair in feature_pairs:
+            feature, color = pair.split(":")
+            features[feature] = color
+    else:
+        features = None
 
     create_svg(alignment, find_path(out_directory, "w", "d"),
                codes=args.codes, nums=args.nums, features=features)
