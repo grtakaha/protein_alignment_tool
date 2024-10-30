@@ -88,6 +88,7 @@ Runs one or more of the below scripts in the order given.
 
 **Example**: python -m pat_main -i ./alignment.clustal -o ./svg_folder/ -ord annotate svg -u TRUE -c FALSE -nums TRUE
 
+**Usage**:
 ```
 usage: pat_main.py [-h] [-i INFILE] [-o OUT_DIRECTORY]
                    [-ord ORDER [ORDER ...]] [-s STYPE] [-nr NUM_RES]
@@ -240,7 +241,7 @@ python -m pat_main -i ./three_proteins.fasta -o ./alignments_folder/ -ord annota
 python -m alignment -i ./three_proteins.fasta -o ./alignments_folder/ -s protein -title three_proteins
 ```
 
-**Usage**
+**Usage**:
 ```
 usage: alignment.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-s STYPE] [-t TITLE]
 
@@ -258,113 +259,81 @@ optional arguments:
 
 # clustal_to_svg.py
 
-Reformats a .clustal_num or .clustal alignment into an editable Inkscape SVG. Currently annotates conserved residues (automatic, not optional) and active site residues (requires an input annotation file, optional).
+Reformats a .clustal_num or .clustal alignment into an editable Inkscape SVG. Currently annotates conserved residues (automatic, not optional) and a given list of features (optional).
 
-INPUT: A CLUSTAL or CLUSTAL_NUM file
+**INPUT**: A CLUSTAL or CLUSTAL_NUM file
 
-OUTPUT: A sequential set of SVGs (.svg), numbered 0, 1, 2, etc., with formatted alignments and associated conserved residues and/or annotations.
+**OUTPUT**: A sequential set of SVGs (.svg), numbered 0, 1, 2, etc., with formatted alignments and associated conserved residues and/or annotations.
 
-Example usage from main_tool.py:\
-  &ensp;python main_tool.py [-i INFILE] [-o OUT_DIRECTORY] svg [-h] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
-                                                         &nbsp;&ensp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[-a ANNOTATIONS]
+**NOTE**: These SVG outputs were designed to be edited in Inkscape. They retain full functionality when opened in Inkscape, including multiline text-box editability. They retain some functionality when opened in other SVG viewers/editors. They can be viewed and edited in Illustrator, but do not retain multiline text-box editability (each letter is its own text-box). They can also be viewed in Chrome.
 
-Example usage:\
-  &ensp;python clustal_to_svg.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-c CODES] [-n NUMS] [-u UNIPROT_FORMAT]
-                           &ensp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[-a ANNOTATIONS]
+**Example from pat_main.py**:
+```
+python -m pat_main -i ./proteins.fasta -o ./SVGs/ -ord align svg -s protein -u TRUE -c FALSE -n FALSE -a annotations.ann -f "Active site:blue,Propeptide:#000000"
+```
 
-optional arguments:\
-  &ensp;-h, --help &emsp;&emsp;&emsp;show this help message and exit\
-  &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
-  &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
-  &ensp;-c CODES, --codes CODES\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.\
-  &ensp;-n NUMS, --nums NUMS\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add total residue numbers to the right side of every line.\
-  &ensp;-u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA\
-  &ensp;-a ANNOTATIONS, --annotations ANNOTATIONS\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
+**Example standalone**:
+```
+python -m clustal_to_svg -i ./alignment.clustal -o ./SVGs/ -u TRUE -c FALSE -n FALSE -a annotations.ann -f "Active site:blue,Propeptide:#000000"
+```
 
+**Usage**:
+```
+usage: clustal_to_svg.py [-h] [-i INFILE] [-o OUT_DIRECTORY] [-c CODES]
+                         [-n NUMS] [-u UNIPROT_FORMAT] [-a ANNOTATIONS]
+                         [-f FEATURES]
 
-# main.py
-
-Runs one or more of the above in the order given.
-
-INPUT: Depends on which tool(s) are being executed. Should be an acceptable input of the first tool being executed. Inputs for runs that start with annotate.py may additionally be limited by what can be passed to downstream tools.  Example: multi --order annotate svg -> must use .clustal or .clustal_num file as input (.fasta file cannot be used by clustal_to_svg.py)
-
-OUTPUT: Depends on which tool(s) are being executed. Each tool will have its own output if it is included in a run. All outputs will be split into separate directories in a multi run that includes blast.py.
-
-Example usage:\
-  &ensp;python main.py [-i INFILE] [-o OUT_DIRECTORY] {blast,annotate,align,svg,multi} [-h] [-ord ORDER [ORDER...]]\
- &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;[-s STYPE] [-e EMAIL]\
- &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;[-nr NUM_RES] [-t TITLE]\
- &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;[-c CODES] [-n NUMS]\
- &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;[-u UNIPROT_FORMAT]\
- &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;[-a ANNOTATIONS]
-
-Centralized Tool Manager
-
-positional arguments:\
-  &ensp;{blast,annotate,align,svg,multi}\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Tool to execute
-
-optional arguments:\
-  &ensp;-h, --help &emsp;&emsp;&emsp;show this help message and exit\
-  &ensp;-i INFILE, --infile INFILE\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of input file.\
-  &ensp;-o OUT_DIRECTORY, --out_directory OUT_DIRECTORY\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path of output directory. Must end with "/".\
-  &ensp;-ord ORDER [ORDER ...], --order ORDER [ORDER ...]\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Order of tools to run if "multi" is used as a positional argument. There are currently limited ways to run multi (inputs and outputs will vary depending on start and end):\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align svg\
-			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate align\
-			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast annotate\
-			&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate svg\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align annotate\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align svg\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast align\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;blast\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate align svg\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate align\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate svg\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;annotate\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align annotate svg\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align annotate\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align svg\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;align\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;svg\
-  &ensp;-s STYPE, --stype STYPE\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Sequence type ("protein" or "dna"). Use "dna" if aligning RNA sequences too. If run using multi, use only protein sequences and "protein" in the --stype optional argument.\
-  &ensp;-e EMAIL, --email EMAIL\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Personal email. Used to submit BLAST and Clustal Omega jobs.\
-  &ensp;-nr NUM_RES, --num_res NUM_RES\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Number of results.\
-  &ensp;-t TITLE, --title TITLE\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Title for the output alignment (.clustal_num) and percent identity matrix (.pim). Example: alignment1 -> alignment1.clustal_num, alignment1.pim\
-  &ensp;-c CODES, --codes CODES\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add Clustal Omega conservation codes to the bottom of each aligned block.\
-  &ensp;-n NUMS, --nums NUMS\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will add total residue numbers to the right side of every line.\
-  &ensp;-u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Default FALSE. If TRUE, will truncate accessions according to UniProt formatting. Example: sp|P00784|PAPA1_CARPA -> PAPA1_CARPA\
-  &ensp;-a ANNOTATIONS, --annotations ANNOTATIONS\
-                        &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Full path to annotation file. Currently only supports active site annotations. Others will be ignored. If run using multi, annotations can either be provided separately, or acquired from UniProt by including "annotate" in the --order optional argument.
-
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INFILE, --infile INFILE
+  -o OUT_DIRECTORY, --out_directory OUT_DIRECTORY
+                        Full path of output directory.
+  -c CODES, --codes CODES
+                        When set to TRUE, includes Clustal identity codes at
+                        the bottom of each block.
+  -n NUMS, --nums NUMS  When set to TRUE, includes total residue numbers at
+                        the end of each line.
+  -u UNIPROT_FORMAT, --uniprot_format UNIPROT_FORMAT
+                        When set to TRUE, truncates all accessions as if they
+                        were UniProt entries. Ex. sp|P00784|PAPA1_CARPA ->
+                        PAPA1_CARPA
+  -a ANNOTATIONS, --annotations ANNOTATIONS
+                        If an annotation file is provided, it will be used to
+                        annotate the resulting SVG files.
+  -f FEATURES, --features FEATURES
+                        A comma-separated list of feature:color pairs to
+                        include in SVGs. Case sensitive. If features include
+                        spaces, the list must be enclosed in quotes. If no
+                        features should be included, use: -f None The
+                        following example is default behavior. Ex. -f "Active
+                        site:#0000ff,Disulfide
+                        bond:#e27441,Propeptide:#9e00f2,Signal:#2b7441"
+```
 
 # ANNOTATION FORMAT
 
-As of 2024.03.19, only annotations of type "Active site" will be used. This will be updated in the future.
+Annotations can be added to an SVG with the -a or --annotations option in a run that calls clustal_to_svg.py.
 
+A truncated, but real example of a valid annotation file can be found in annotation_example.ann.
+
+**NOTE**: If no annotation is explicity provided, and retrieve_annotations.py is called during the run, clustal_to_svg.py will instead use the "all.ann" annotation file retrieved by retrieve_annotations.py. Annotation files provided via -a or --annotations will override those retrieved by retrieve_annotations.py.
+
+**NOTE**: The -f or --features option was added to clustal_to_svg.py on 2024.10.30. It allows for users to provide a comma-separated list of feature:color pairs that can be used to customize SVG annotations.
+Default behavior is identical to including the following option in a run that calls clustal_to_svg.py:
+```
+-f "Active site:#0000ff,Disulfide bond:#e27441,Propeptide:#9e00f2,Signal:#2b7441"
+```
+
+**Format**:
 Annotation files that include the following columns and VALUES (tab-delimited) can be used as inputs for clustal_to_svg.py:
 
 		prot	whole_prot	type	location.start.value	location.end.value
 	ARBITRARY_INDEX	UNIPROT_FORMAT_ACC	FULL_ACCESSION	ANNOTATION_TYPE	START	END
 
-A real example might look like:
+ Other columns, like "description" may be added for record-keeping, but they will not be used when adding annotations to SVGs.
+
+**Example**:
 
 		prot	whole_prot	type	location.start.value	location.end.value
 	0	PAPA1_CARPA	sp|P00784|PAPA1_CARPA	Active site	158	158
 
-A truncated, but real example of a valid annotation file can be found in annotation_example.ann.
