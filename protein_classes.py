@@ -207,7 +207,10 @@ class Alignment:
             else:
                 end = int(end)
 
-            feature = Feature(feature_type, start, end, row.description)
+            try:
+                feature = Feature(feature_type, start, end, row.description)
+            except AttributeError:
+                feature = Feature(feature_type, start, end, "")
 
             prot_temp = self.proteins.get(row.whole_prot)
             if prot_temp:
