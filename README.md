@@ -1,16 +1,6 @@
-Collection of scripts used to visualize protein sequences.
+### Protein Alignment Tool: A centralized tool manager for a collection of scripts used to process and visualize protein sequences.
 
-Update 2024.04.08: BLAST and Clustal Omega API calls have been removed and replaced by calls to local installations:
-https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ \
-http://www.clustal.org/omega/
-
-NOTE: The above just need to be unpacked and added to Path/PATH/etc.
-
-NOTE: The descriptions in this README are not entirely accurate as of 2024.04.08. Scripts should function similarly, but now require the command-line installations of BLAST and Clustal Omega.
-
-##### Continue with out-of-date README #####
-
-NOTE: These scripts make use of EMBL-EBI and NCBI resources. References for tools and databases used here include:
+**NOTE**: These scripts make use of EMBL-EBI and NCBI resources. References for tools and databases used here include:
 
 UniProt:\
 The UniProt Consortium. \
