@@ -83,30 +83,54 @@ def main(args):
     infile = find_path(args.infile, "r", "f").replace("\\", "/")
     print(f"Processing sequences from {infile}\n", flush=True)
     proteins = []
+    dupe_dict = {} # Dictionary of duplicates that should be skipped
     if infile.endswith(".fasta"):
         infile_df = fasta_to_df(infile)
         #infile_df = remove_query(infile_df)
         for prot in infile_df.index.values:
-            if isinstance(infile_df.loc[prot, "Accession"], pd.Series):
-                # Only use the first accession that IS NOT the query
-                acc = infile_df.loc[prot, "Accession"][0][1:]
+            # Skips duplicate accessions
+            if dupe_dict.get(prot):
+                continue
+            elif isinstance(infile_df.loc[prot, "Accession"], pd.Series):
+                dupe_dict[prot] = 1
+                # Only use the first accession that IS NOT the query.
+                for acc in infile_df.loc[prot, "Accession"]:
+                    if not acc.startswith(">QUERY_"):
+                        acc = acc[1:]
+                        break
                 print(f"Duplicate accessions for ID: {prot}.\nProceeding with {acc}.\n", flush=True)
             else:
                 acc = infile_df.loc[prot, "Accession"][1:]
             proteins.append((prot, acc.split(" ")[0]))
-    elif infile.endswith(".clustal") or infile.endswith(".clustal_num"):
+    elif (infile.endswith(".clustal") or 
+          infile.endswith(".clustal_num") or 
+          infile.endswith(".aln-clustal_num")):
         alignment = read_alignment(infile)
         for whole_prot in alignment.proteins:
-            proteins.append((whole_prot.split(" ")[0].split("|")[-1], whole_prot))
+            # Set to UniProt format the way FASTA files are read in by default.
+            prot = whole_prot.split(" ")[0].split("|")[-1]
+            # Note that this will not trigger if QUERY is found first. Decide later if I care.
+            if dupe_dict.get(prot):
+                print(f"Duplicate accessions for ID: {prot}.\nProceeding with {dupe_dict.get(prot)}.\n", flush=True)
+            elif not whole_prot.startswith("QUERY_"):
+                proteins.append((prot, whole_prot))
+                dupe_dict[prot] = whole_prot
     else:
-        print("Infile does not have a \".fasta\", \".clustal\", " +
+        print("Infile does not have a \".fasta\", \".clustal\", \".aln-clustal_num\" " +
               "or \".clustal_num\" extension.\nAssuming FASTA file.\n", flush=True)
         infile_df = fasta_to_df(infile)
         #infile_df = remove_query(infile_df)
         for prot in infile_df.index.values:
-            if isinstance(infile_df.loc[prot, "Accession"], pd.Series):
+            # Skips duplicate accessions
+            if dupe_dict.get(prot):
+                continue            
+            elif isinstance(infile_df.loc[prot, "Accession"], pd.Series):
+                dupe_dict[prot] = 1
                 # Only use the first accession that IS NOT the query.
-                acc = infile_df.loc[prot, "Accession"][0][1:]
+                for acc in infile_df.loc[prot, "Accession"]:
+                    if not acc.startswith("QUERY_"):
+                        acc = acc[1:]
+                        break
                 print(f"Duplicate accessions for ID: {prot}.\nProceeding with {acc}.\n", flush=True)
             else:
                 acc = infile_df.loc[prot, "Accession"][1:]

@@ -159,7 +159,6 @@ def execute_tool(args):
         #print("here align", args.infile)
 
     elif tool_name == "svg":
-        print(f"features: {args.features}")
         cts.main(args)
 
     elif tool_name == "multi":

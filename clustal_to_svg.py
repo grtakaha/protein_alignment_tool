@@ -643,10 +643,8 @@ def main(args):
     annotations = args.annotations
     if annotations != "":
         annotations = pd.read_csv(find_path(annotations, "r", "f"), sep="\t")
-        features = "TRUE"
     else:
         annotations = pd.DataFrame()
-        features = "FALSE"
     alignment.add_features(annotations) # Add nothing if annotations aren't set.
 
     if args.features != "None":
