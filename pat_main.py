@@ -288,7 +288,7 @@ def find_outputs(args):
         new_inputs.append(f"{args.out_directory}/{args.title}.clustal".replace("//", "/"))
     elif tool_name == "svg":
         pass # Not necessary to return anything because svg is the end of the line.
-    print(new_inputs)
+
     return new_inputs
 
 def main(args):
