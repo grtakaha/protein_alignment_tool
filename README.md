@@ -101,7 +101,8 @@ optional arguments:
                         Order of tools to run (blast, annotate, align,
                         svg).Ex. --order align svg
   -s STYPE, --stype STYPE
-                        Sequence type ("protein" or "dna").
+                        Sequence type ("protein" is currently the only
+                        option).
   -nr NUM_RES, --num_res NUM_RES
                         Number of results.
   -t TITLE, --title TITLE
