@@ -80,7 +80,7 @@ def parse_args():
                         help="Order of tools to run (blast, annotate, align, svg)." +
                         "Ex. --order align svg")
     parser.add_argument("-s", "--stype", default="protein",
-                        help="Sequence type (\"protein\" or \"dna\").")
+                        help="Sequence type (\"protein\" is currently the only option).")
     #parser.add_argument("-e", "--email", default="")
     parser.add_argument("-nr", "--num_res", default="10",
                         help="Number of results.")
