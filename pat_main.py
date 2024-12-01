@@ -99,7 +99,8 @@ def parse_args():
                         help="If an annotation file is provided, it will be " +
                         "used to annotate the resulting SVG files.")
     parser.add_argument("-f", "--features",
-                        default="Active site,Disulfide bond,Propeptide,Signal",
+                        default="Active site:#0000ff,Disulfide bond:#e27441," +
+                        "Propeptide:#9e00f2,Signal:#2b7441",
                         help="A comma-separated list of feature:color pairs to include in SVGs." +
                         "Case sensitive. " +
                         "If features include spaces, the list must be enclosed in quotes." +

@@ -612,13 +612,15 @@ def parse_args():
                         help="If an annotation file is provided, it will be " +
                         "used to annotate the resulting SVG files.")
     parser.add_argument("-f", "--features",
-                        default="Active site,Disulfide bond,Propeptide,Signal",
+                        default="Active site:#0000ff,Disulfide bond:#e27441," +
+                        "Propeptide:#9e00f2,Signal:#2b7441",
                         help="A comma-separated list of feature:color pairs to include in SVGs." +
-                        "\nCase sensitive.\n" +
-                        "If features include spaces, the list must be enclosed in quotes.\n" +
-                        "If no features should be included, use: -f None\n" +
-                        "The following example is default behavior.\n" +
-                        "Ex. -f \"Active site:#0000ff,Disulfide bond:#e27441,Propeptide:#9e00f2,Signal:#2b7441\"")
+                        "Case sensitive. " +
+                        "If features include spaces, the list must be enclosed in quotes." +
+                        "If no features should be included, use: -f None" +
+                        "The following example is default behavior. " +
+                        "Ex. -f \"Active site:#0000ff,Disulfide bond:#e27441," +
+                        "Propeptide:#9e00f2,Signal:#2b7441\"")
 
     return parser.parse_args()
 
