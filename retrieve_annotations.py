@@ -41,33 +41,6 @@ def parse_args():
 
     return parser.parse_args()
 
-## TODO: Figure out another way to handle queries.
-#def remove_query(uniprot_df):
-    #"""
-    #Takes in command-line arguments and returns an argparse Namespace object.
-
-        #Parameters:
-            #uniprot_df (pandas,DataFrame): Dataframe of input UniProt sequences.
-                                   #May include a query sequence from search_proteins.py.
-
-        #Returns:
-            #uniprot_df (pandas,DataFrame): Dataframe with no query sequence from search_proteins.py.
-    #"""
-
-    #for protein in uniprot_df.index.values:
-        #acc = uniprot_df.loc[protein, "Accession"]
-        #if isinstance(acc, pd.Series):
-            #for i, duplicate_acc in enumerate(acc):
-                #print(duplicate_acc)
-                #duplicate_acc = acc[i]
-                #print(duplicate_acc)
-                #if "QUERY_" in duplicate_acc:
-                    #uniprot_df = uniprot_df[uniprot_df["Accession"] != duplicate_acc]
-        #else:
-            #if "QUERY_" in acc:
-                #uniprot_df = uniprot_df.drop(uniprot_df[uniprot_df["Accession"] == acc].index)
-    #return uniprot_df
-
 def main(args):
     """
     Parses an input FASTA file and saves UniProt annotations.

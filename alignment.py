@@ -38,9 +38,6 @@ def parse_args():
                         help="Full path of output directory. Must end with \"/\".")
     parser.add_argument("-s", "--stype", default="protein",
                         help="Sequence type (\"protein\" or \"dna\").")
-    # TODO: Remove email requirement.
-    #parser.add_argument("-e", "--email",
-                        #help="Personal email. Used to submit BLAST and Clustal Omega jobs.")
     parser.add_argument("-t", "--title", default="alignment",
                         help="Alignment title ([TITLE].clustal, [TITLE].pim).")
 
@@ -54,8 +51,6 @@ def main(args):
             An alignment (.clustal_num) and percent identity matrix (.pim)
             created from the input FASTA file.
     """
-
-    #args = parse_args()
 
     infile = find_path(args.infile, "r", "f").replace("\\", "/")
     print(f"Processing sequences from {infile} \n", flush=True)
